@@ -1,5 +1,6 @@
+#include "std_types.h"
 
 int main (void)
 {
-   return 0;
+   return EXIT_PROGRAM;
 }

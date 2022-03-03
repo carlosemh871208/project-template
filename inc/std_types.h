@@ -38,7 +38,7 @@ typedef signed   short sint16;
 
 /*Long types definition*/
 typedef unsigned long  uint32;
-typedef signed   long  uint32;
+typedef signed   long  sint32;
 
 /*Boolean type definition*/
 typedef uint8 boolean;
@@ -85,5 +85,3 @@ typedef uint8 boolean;
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
  *| CMARTI  |     NA      | 28-Apr-2021 | First version of Std_Types.h                                                |
 **********************************************************************************************************************/
-
-
