@@ -2,25 +2,25 @@
 # $Source: Makefile$
 # $Revision: Version 1.0 $
 # $Author: Carlos Martinez $
-# $Date: 2022-02-23 $
+# $Date: 2022-03-03 $
 ################################################################################
 # DESCRIPTION :                                                                                                     
 # Makefile
 #    Compilation script for entire project
 ################################################################################
 # Project name (Shall be changed)
-NAME = projectName
+NAME = stm32f401-exe
 
 # Makefile variables
 RM := rm -rf
-CC = gcc
+# CC = gcc
 
 # Use following variables for ARM cortex m4 microcontrollers.
 # Compiler ARMv7
-# CC = arm-none-eabi-gcc
+CC = arm-none-eabi-gcc
 
 # ARM CORTEX M4 processor
-# MACH = cortex-m4
+MACH = cortex-m4
 
 # Output folders .o & binary
 OBJDIR = obj
@@ -44,10 +44,12 @@ SETDIR = ../settings
 TARGET = $(BINDIR)/$(NAME)
 
 # Objects place
-OBJS   = $(OBJDIR)/main.o 
+OBJS   = $(OBJDIR)/main.o\
+         $(OBJDIR)/stm32_startup.o
+         
 
 # Compilation flags
-CFLAGS = -MD -Wall -Werror -r -I$(INCDIR)
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
 # Linker flags
 LFLAGS = -MD -Wall -Werror -L$(LIBDIR)
@@ -76,7 +78,11 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@echo
 	@echo Compiling main.c file
 	$(CC) $(CFLAGS) $< -o $@
-	@echo $(NAME) compilation done.
+	@echo
+	
+$(OBJDIR)/%.o : $(SETDIR)/Startup_code/%.c
+	@echo Compiling startup code.
+	$(CC) $(CFLAGS) $< -o $@
 	@echo
 
 # To add dependencies files
@@ -92,4 +98,5 @@ clean :
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
+ #| carlosm |     NA      | 03-Mar-2022 | Makefile version for STM32F401       |
 ################################################################################

@@ -25,3 +25,23 @@ Into source folder "src", a main.c file is included, there are two more folders.
 		HAL(Hardware Abstraction Layer): This the abstraction of low level drivers provided by the mcal.
 		MCAL(Microcontroller Abstraction Layer): This layer provide the drivers for upper layers, this is
 							 the abstraction of microncontroller resources converted to code. 
+							 
+This Baseline is for STM32F401
+Software development.
+
+Important notes:
+Use following command to see memory sections:
+arm-none-eabi-onjbump -h yourfile.o
+
+In this project we have differente sections:
+.text   -> this section contains code or program instructions.
+.data   -> this section contains initialized data (initialized global and static variables).
+.bss    -> this section contains uninitialized data (uninitialized global and static variables).
+.rodata -> this section contains read only data.
+
+Intructions (code) are stored in flash memory of the microcontroller.
+Data (variables) are stored in main memory (RAM)
+
+Why data is stored in RAM but not in FLASH?
+Because, data are nothing, but variables can change at any time during runtime of the program.
+
