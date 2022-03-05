@@ -39,9 +39,10 @@ LIBDIR = ../lib
 
 # Settings library Directory
 SETDIR = ../settings
+LKRDIR = ../settings/Linker_files
 
 # Target place 
-TARGET = $(BINDIR)/$(NAME)
+TARGET = $(BINDIR)/$(NAME).elf
 
 # Objects place
 OBJS   = $(OBJDIR)/main.o\
@@ -52,7 +53,7 @@ OBJS   = $(OBJDIR)/main.o\
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
 # Linker flags
-LFLAGS = -MD -Wall -Werror -L$(LIBDIR)
+LFLAGS = -nostdlib -Wall -Werror -T $(LKRDIR)/stm32f401_ls.ld -Wl,-Map=$(BINDIR)/$(NAME).map
 
 .PHONY : all
 # Rule to create target
@@ -62,6 +63,7 @@ $(TARGET) : $(OBJS)
 	@echo Linker started
 	@mkdir -p $(BINDIR) # Create bin directory
 	$(CC) $(LFLAGS) $(OBJS) -o $(TARGET)
+	@echo
 	@echo $(NAME) Succesfully Builded.
 
 # Compilation stage

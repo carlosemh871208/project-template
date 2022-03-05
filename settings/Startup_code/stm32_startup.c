@@ -27,6 +27,22 @@
 #include "std_types.h"
 /*                                                Functions prototypes                                               */
 /*********************************************************************************************************************/
+/*
+* Following constants are extracted from microcontroller user manual
+*/
+#define SRAM_START  (uint32) 0x20000000u
+#define SRAM_END    (uint32) 0x20017FFFu (SRAM SIZE 96 Kbytes)
+#define STACK_START (uint32) 0x20018000u
+
+extern uint32 __text_end__;
+extern uint32 __data_start__;
+extern uint32 __data_end__;
+extern uint32 __bss_start__;
+extern uint32 __bss_end__;
+
+/*Main function prototype*/
+int main (void);
+
 /*ARM Cortex M4 exceptions*/
 void Reset_Handler               (void);
 void NMI_Handler                 (void)         __attribute__((weak, alias("Default_Handler")));
@@ -99,13 +115,6 @@ void SPI4_Handler                 (void)         __attribute__((weak, alias("Def
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-/*
-* Following constants are extracted from microcontroller user manual
-*/
-#define SRAM_START  (uint32) 0x20000000u
-#define SRAM_END    (uint32) 0x20017FFFu (SRAM SIZE 96 Kbytes)
-#define STACK_START (uint32) 0x20018000u
-
 uint32 vector_table[] __attribute__((section(".isr_vector"))) =
 {
     STACK_START,                    /*Memory location when stack starts*/
@@ -191,10 +200,23 @@ uint32 vector_table[] __attribute__((section(".isr_vector"))) =
 void Reset_Handler (void)
 {
    /* Copy .data  section to SRAM*/
-   
+   uint32 size = &__data_end__ - &__data_start__;
+   uint8 *pDst = (uint8*) &__data_start__;
+   uint8 *pSrc = (uint8*) &__text_end__;
+   uint32 counter = 0;
+   for(counter = 0; counter < size; counter++)
+   {
+       *pDst++ = *pSrc++;
+   }
    /* Initialize the .bss sectino to zero in SRAM*/
-   
-   /* Call main function*/ 
+   size = &__bss_end__ - &__bss_start__;
+   pDst = (uint8 *) &__bss_start__;
+   for(counter = 0; counter < size; counter++)
+   {
+       *pDst++ = *pSrc++;
+   }
+   /* Call main function*/
+   main();
 }
 
 /* Default handler for all exceptions*/
