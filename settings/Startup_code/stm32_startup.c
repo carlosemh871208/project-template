@@ -200,7 +200,7 @@ uint32 vector_table[] __attribute__((section(".isr_vector"))) =
 void Reset_Handler (void)
 {
    /* Copy .data  section to SRAM*/
-   uint32 size = &__data_end__ - &__data_start__;
+   uint32 size = (uint32)&__data_end__ - (uint32)&__data_start__;
    uint8 *pDst = (uint8*) &__data_start__;
    uint8 *pSrc = (uint8*) &__text_end__;
    uint32 counter = 0;
