@@ -18,6 +18,7 @@ RM := rm -rf
 # Use following variables for ARM cortex m4 microcontrollers.
 # Compiler ARMv7
 CC = arm-none-eabi-gcc
+OBJCOPY = arm-none-eabi-objcopy
 
 # ARM CORTEX M4 processor
 MACH = cortex-m4
@@ -43,6 +44,8 @@ LKRDIR = ../settings/Linker_files
 
 # Target place 
 TARGET = $(BINDIR)/$(NAME).elf
+TGTBIN = $(BINDIR)/$(NAME).bin
+TGTHEX = $(BINDIR)/$(NAME).hex
 
 # Objects place
 OBJS   = $(OBJDIR)/main.o\
@@ -63,6 +66,8 @@ $(TARGET) : $(OBJS)
 	@echo Linker started
 	@mkdir -p $(BINDIR) # Create bin directory
 	$(CC) $(LFLAGS) $(OBJS) -o $(TARGET)
+	$(OBJCOPY) -O ihex $(TARGET) $(TGTHEX)
+	$(OBJCOPY) -O binary $(TARGET) $(TGTBIN)
 	@echo
 	@echo $(NAME) Succesfully Builded.
 
@@ -97,8 +102,13 @@ clean :
 	@$(RM) $(OBJDIR) $(BINDIR)
 	@echo End of cleaning
 	
+# To program microcontroller
+.PHONY : load
+load:
+	
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
  #| carlosm |     NA      | 03-Mar-2022 | Makefile version for STM32F401       |
+ #| carlosm |     NA      | 14-Mar-2022 | Added .hex and .bin extensions       |
 ################################################################################
