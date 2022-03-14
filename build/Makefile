@@ -17,7 +17,7 @@ RM := rm -rf
 
 # Use following variables for ARM cortex m4 microcontrollers.
 # Compiler ARMv7
-CC = arm-none-eabi-gcc
+CC      = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 
 # ARM CORTEX M4 processor
@@ -51,6 +51,8 @@ TGTHEX = $(BINDIR)/$(NAME).hex
 OBJS   = $(OBJDIR)/main.o\
          $(OBJDIR)/stm32_startup.o
          
+#JLINK tool
+JLINK = /usr/bin/JLinkExe
 
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
@@ -105,10 +107,12 @@ clean :
 # To program microcontroller
 .PHONY : load
 load:
-	
+	@echo JLink execution started
+	$(JLINK)
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
  #| carlosm |     NA      | 03-Mar-2022 | Makefile version for STM32F401       |
  #| carlosm |     NA      | 14-Mar-2022 | Added .hex and .bin extensions       |
+ #| carlosm |     NA      | 14-Mar-2022 | Added load command tp flash uC       |
 ################################################################################
