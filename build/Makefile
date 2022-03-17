@@ -11,6 +11,9 @@
 # Project name (Shall be changed)
 NAME = stm32f401-exe
 
+# Microcontroller name
+DEVICE = STM32F401RE
+
 # Makefile variables
 RM := rm -rf
 # CC = gcc
@@ -19,6 +22,7 @@ RM := rm -rf
 # Compiler ARMv7
 CC      = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
+SIZE    = arm-none-eabi-size
 
 # ARM CORTEX M4 processor
 MACH = cortex-m4
@@ -71,6 +75,8 @@ $(TARGET) : $(OBJS)
 	$(OBJCOPY) -O ihex $(TARGET) $(TGTHEX)
 	$(OBJCOPY) -O binary $(TARGET) $(TGTBIN)
 	@echo
+	$(SIZE) $(TARGET)
+	@echo
 	@echo $(NAME) Succesfully Builded.
 
 # Compilation stage
@@ -105,14 +111,22 @@ clean :
 	@echo End of cleaning
 	
 # To program microcontroller
+$(BINDIR)/jflash: $(TGTBIN)
+	@touch $@
+	@echo Device $(DEVICE) > $@
+	@echo si 1'\n'Speed 4000 >> $@
+	@echo loadbin $< 0x08000000 >> $@
+	@echo r'\n'g'\n'qc >> $@
+
 .PHONY : load
-load:
+load: $(BINDIR)/jflash
 	@echo JLink execution started
-	$(JLINK)
+	$(JLINK) -commanderscript $<
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
  #| carlosm |     NA      | 03-Mar-2022 | Makefile version for STM32F401       |
  #| carlosm |     NA      | 14-Mar-2022 | Added .hex and .bin extensions       |
- #| carlosm |     NA      | 14-Mar-2022 | Added load command tp flash uC       |
+ #| carlosm |     NA      | 14-Mar-2022 | Added load command to flash uC       |
+ #| carlosm |     NA      | 17-Mar-2022 | Added script for flashing firmware   |
 ################################################################################
