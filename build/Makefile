@@ -32,7 +32,7 @@ OBJDIR = obj
 BINDIR = bin
 
 # Includes Directory
-INCDIR  = ../inc
+INCDIR   = ../inc
 
 # Source Directories
 SRCDIR  = ../src
@@ -57,7 +57,7 @@ OBJS   = $(OBJDIR)/main.o\
          
 #JLINK tool
 JLINK = /usr/bin/JLinkExe
-
+DEBUG = /usr/bin/JLinkGDBServer
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
@@ -91,7 +91,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@echo Starting ASW compilation
 	@$(MAKE) -C $(ASWDIR)
 	@echo
-	@echo Compiling main.c file
+	@echo Compiling main.c file.
 	$(CC) $(CFLAGS) $< -o $@
 	@echo
 	
@@ -118,10 +118,14 @@ $(BINDIR)/jflash: $(TGTBIN)
 	@echo loadbin $< 0x08000000 >> $@
 	@echo r'\n'g'\n'qc >> $@
 
-.PHONY : load
-load: $(BINDIR)/jflash
+.PHONY : flash
+flash: $(BINDIR)/jflash
 	@echo JLink execution started
 	$(JLINK) -commanderscript $<
+	
+.PHONY : debug
+debug:
+	$(DEBUG) -if SWD -device $(DEVICE)
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |

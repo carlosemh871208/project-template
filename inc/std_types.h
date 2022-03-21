@@ -53,26 +53,6 @@ typedef uint8 boolean;
 
 /*Exit Program*/
 #define EXIT_PROGRAM (boolean) 0u
-
-//* IO definitions (access restrictions to peripheral registers) */
-/**
-*   IO Type Qualifiers are used
-*   \li to specify the access to peripheral variables.
-*   \li for automatic generation of peripheral register debug information.
-*/
-#ifndef __I0
-    #define __IO volatile /*Define read/write permissions*/
-#endif
-
-#ifndef __I
-    #define __I volatile const /*Define read only permissions*/
-#endif
-
-#ifndef __O
-    #define __O volatile /*Define write only permissions*/
-#endif
-
-
 /*                                                    Exported Variables                                             */
 /*********************************************************************************************************************/
 
