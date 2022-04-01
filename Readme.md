@@ -115,4 +115,5 @@ Install Eclipse
 https://itsfoss.com/install-latest-eclipse-ubuntu/
 
 Github personal access token
+https://stackoverflow.com/questions/35942754/how-can-i-save-username-and-password-in-git
 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
