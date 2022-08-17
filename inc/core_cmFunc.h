@@ -1,5 +1,5 @@
 /*********************************************************************************************************************/
-/*                                                 MAIN SOURCE CODE                                                  */
+/*                                                INCLUDES GROUP                                                     */
 /*********************************************************************************************************************/
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
@@ -7,12 +7,12 @@
  * $Source: main.c $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
- * $Date: 2022-03-17 $
+ * $Date: 2022-03-02 $
  */
 /*********************************************************************************************************************/
 /* DESCRIPTION :                                                                                                     */
-/** \main.c
-    Here all initialization is made. 
+/** \std_Types.h
+    Here we define all data types required by the project.
  */
 /*********************************************************************************************************************/
 /* ALL RIGHTS RESERVED                                                                                               */
@@ -22,34 +22,61 @@
 /* for damages.                                                                                                      */
 /*********************************************************************************************************************/
 
+#if   defined ( __ICCARM__ )
+ #pragma system_include         /* treat file as system include file for MISRA check */
+#elif defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+  #pragma clang system_header   /* treat file as system include file */
+#endif
+
+#ifndef CORE_CMFUNC_H_
+#define CORE_CMFUNC_H_
 /*                                                       Includes                                                    */
 /*********************************************************************************************************************/
-#include "std_types.h"
-#include "stm32F401re.h"
-#include "application_delay.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-#define LED_GPIO        GPIOA
-#define LED_PIN         5
+/*------------------ RealView Compiler -----------------*/
+#if   defined ( __CC_ARM )
+  #include "cmsis_armcc.h"
 
-/*                                           Main function implementation                                            */
+/*------------------ ARM Compiler V6 -------------------*/
+#elif defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+  #include "cmsis_armcc_V6.h"
+
+/*------------------ GNU Compiler ----------------------*/
+#elif defined ( __GNUC__ )
+  #include "cmsis_gcc.h"
+
+/*------------------ ICC Compiler ----------------------*/
+#elif defined ( __ICCARM__ )
+  #include <cmsis_iar.h>
+
+/*------------------ TI CCS Compiler -------------------*/
+#elif defined ( __TMS470__ )
+  #include <cmsis_ccs.h>
+
+/*------------------ TASKING Compiler ------------------*/
+#elif defined ( __TASKING__ )
+  /*
+   * The CMSIS functions have been implemented as intrinsics in the compiler.
+   * Please use "carm -?i" to get an up to date list of all intrinsics,
+   * Including the CMSIS ones.
+   */
+
+/*------------------ COSMIC Compiler -------------------*/
+#elif defined ( __CSMC__ )
+  #include <cmsis_csm.h>
+
+#endif  
+/*                                                   Exported Variables                                              */
 /*********************************************************************************************************************/
-int main (void)
-{
-    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/   
-    for(;;)
-    {
-        LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
-        set_delay_mS(2000);
-        LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
-        set_delay_mS(2000);
-    }
-    return EXIT_PROGRAM;
-}
+
+/*                                              Exported functions prototypes                                        */
+/*********************************************************************************************************************/
+
+#endif /* STD_TYPES_H_ */
+
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |     NA      | 17-Mar-2022 | main.c standard version.                                                    |
- *| CMARTI  |     NA      | 21-Mar-2022 | main.c Hello world program: blinking LED                                    |
+ *| CMARTI  |     NA      | 28-Apr-2021 | First version of Std_Types.h                                                |
 **********************************************************************************************************************/

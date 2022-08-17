@@ -26,6 +26,26 @@ Into source folder "src", a main.c file is included, there are two more folders.
 		MCAL(Microcontroller Abstraction Layer): This layer provide the drivers for upper layers, this is
 							 the abstraction of microncontroller resources converted to code. 
 							 
+STM32F401_baseline
+This Baseline is for STM32F401
+Software development.
+
+Important notes:
+Use following command to see memory sections:
+arm-none-eabi-onjbump -h yourfile.o
+
+In this project we have differente sections:
+.text   -> this section contains code or program instructions.
+.data   -> this section contains initialized data (initialized global and static variables).
+.bss    -> this section contains uninitialized data (uninitialized global and static variables).
+.rodata -> this section contains read only data.
+
+Intructions (code) are stored in flash memory of the microcontroller.
+Data (variables) are stored in main memory (RAM)
+
+Why data is stored in RAM but not in FLASH?
+Because, data are nothing, but variables can change at any time during runtime of the program.
+
 /***************************************************************************************************************************************************************/
 Installation packages
 This file contains instructions for software development tools.
@@ -117,5 +137,4 @@ https://itsfoss.com/install-latest-eclipse-ubuntu/
 Github personal access token
 https://stackoverflow.com/questions/35942754/how-can-i-save-username-and-password-in-git
 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
-
 

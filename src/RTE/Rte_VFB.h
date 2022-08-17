@@ -1,18 +1,18 @@
 /*********************************************************************************************************************/
-/*                                                 MAIN SOURCE CODE                                                  */
+/*                                                INCLUDES GROUP                                                     */
 /*********************************************************************************************************************/
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
 /*!
- * $Source: main.c $
+ * $Source: Rte_VFB.h $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
- * $Date: 2022-03-17 $
+ * $Date: 2022-08-17 $
  */
 /*********************************************************************************************************************/
 /* DESCRIPTION :                                                                                                     */
-/** \main.c
-    Here all initialization is made. 
+/** \Rte_VFB.h
+    Here we define interfaces that connects BSW with ASW.
  */
 /*********************************************************************************************************************/
 /* ALL RIGHTS RESERVED                                                                                               */
@@ -21,35 +21,24 @@
 /* not permitted without express written authority. Offenders will be liable                                         */
 /* for damages.                                                                                                      */
 /*********************************************************************************************************************/
-
+#ifndef RTE_VFB_H_
+#define RTE_VFB_H_
 /*                                                       Includes                                                    */
 /*********************************************************************************************************************/
 #include "std_types.h"
-#include "stm32F401re.h"
-#include "application_delay.h"
-
+#include "services.h"
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-#define LED_GPIO        GPIOA
-#define LED_PIN         5
-
-/*                                           Main function implementation                                            */
+/*                                                    Exported Variables                                             */
 /*********************************************************************************************************************/
-int main (void)
-{
-    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/   
-    for(;;)
-    {
-        LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
-        set_delay_mS(2000);
-        LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
-        set_delay_mS(2000);
-    }
-    return EXIT_PROGRAM;
-}
+
+/*                                              Exported functions prototypes                                        */
+/*********************************************************************************************************************/
+#define Rte_Services_delay_mS(uint16) Services_delay_mS(uint16)
+
+#endif /* DELAYSERVICES_H_ */
+
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |     NA      | 17-Mar-2022 | main.c standard version.                                                    |
- *| CMARTI  |     NA      | 21-Mar-2022 | main.c Hello world program: blinking LED                                    |
+ *| CMARTI  |     NA      | 17-Aug-2022 | First version of Rte_VFB.h                                                  |
 **********************************************************************************************************************/
