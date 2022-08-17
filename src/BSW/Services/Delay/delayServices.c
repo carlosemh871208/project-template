@@ -1,17 +1,17 @@
 /*********************************************************************************************************************/
-/*                                                 MAIN SOURCE CODE                                                  */
+/*                                            DELAYSERVICES SOURCE CODE                                              */
 /*********************************************************************************************************************/
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
 /*!
- * $Source: main.c $
+ * $Source: delayServices.c $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
  * $Date: 2022-03-17 $
  */
 /*********************************************************************************************************************/
 /* DESCRIPTION :                                                                                                     */
-/** \main.c
+/** \delayServices.c
     Here all initialization is made. 
  */
 /*********************************************************************************************************************/
@@ -26,30 +26,21 @@
 /*********************************************************************************************************************/
 #include "std_types.h"
 #include "stm32F401re.h"
-#include "application_delay.h"
+#include "delayServices.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-#define LED_GPIO        GPIOA
-#define LED_PIN         5
+extern void delay_mS (uint16 userTime);
 
-/*                                           Main function implementation                                            */
+/*                                       delayServices function implementation                                       */
 /*********************************************************************************************************************/
-int main (void)
+extern void delay_mS (uint16 userTime)
 {
-    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/   
-    for(;;)
-    {
-        LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
-        set_delay_mS(2000);
-        LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
-        set_delay_mS(2000);
-    }
-    return EXIT_PROGRAM;
+    for (unsigned i=0; i<userTime; i++)
+        for (volatile unsigned j=0; j<TIME_BASE; j++);
 }
+
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |     NA      | 17-Mar-2022 | main.c standard version.                                                    |
- *| CMARTI  |     NA      | 21-Mar-2022 | main.c Hello world program: blinking LED                                    |
+ *| CMARTI  |     NA      | 17-Aug-2022 | delayServices.c files creation and.                                         |                                |
 **********************************************************************************************************************/

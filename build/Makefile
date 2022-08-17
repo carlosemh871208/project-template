@@ -33,11 +33,13 @@ BINDIR = bin
 
 # Includes Directory
 INCDIR   = ../inc
+ASWINC   = ../src/ASW/Delay \
 
 # Source Directories
 SRCDIR  = ../src
 ASWDIR  = ../src/ASW
 BSWDIR  = ../src/BSW
+RTEDIR  = ../src/RTE 
 
 # Precompiled libraries Directory
 LIBDIR = ../lib
@@ -53,13 +55,16 @@ TGTHEX = $(BINDIR)/$(NAME).hex
 
 # Objects place
 OBJS   = $(OBJDIR)/main.o\
-         $(OBJDIR)/stm32_startup.o
+         $(OBJDIR)/stm32_startup.o\
+		 $(OBJDIR)/application_delay.o\
+		 $(OBJDIR)/delayServices.o
          
 #JLINK tool
 JLINK = /usr/bin/JLinkExe
 DEBUG = /usr/bin/JLinkGDBServer
+
 # Compilation flags
-CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(ASWINC)
 
 # Linker flags
 LFLAGS = -nostdlib -Wall -Werror -T $(LKRDIR)/stm32f401_ls.ld -Wl,-Map=$(BINDIR)/$(NAME).map
@@ -133,4 +138,5 @@ debug:
  #| carlosm |     NA      | 14-Mar-2022 | Added .hex and .bin extensions       |
  #| carlosm |     NA      | 14-Mar-2022 | Added load command to flash uC       |
  #| carlosm |     NA      | 17-Mar-2022 | Added script for flashing firmware   |
+ #| carlosm |     NA      | 17-Aug-2022 | Modified due RTE folder change       |
 ################################################################################

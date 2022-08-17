@@ -8,9 +8,41 @@
 # Makefile
 #    Compilation BSW Services
 ################################################################################
-ser:
+#Microcontroller architecture
+MACH = cortex-m4
+
+# Use following variables for ARM cortex m4 microcontrollers.
+# Compiler ARMv7
+CC      = arm-none-eabi-gcc
+OBJCOPY = arm-none-eabi-objcopy
+SIZE    = arm-none-eabi-size
+
+#Object path
+OBJDIR   = ../../../build/obj
+
+#includes path
+INCDIR   = ../../../inc
+
+#Services path
+SERDIR =  ./Delay
+
+# Compilation flags
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
+
+SRC = $(SERDIR)/delayServices.c \
+
+OBJ = $(OBJDIR)/delayServices.o \
+
+ser :
 	@echo "Executing Services Makefile"
+	@echo Compiling Delay folder source code.
+	$(CC) $(CFLAGS) $(SRC) -o $(OBJ)
+	@echo 
+
+# To add dependencies files
+-include $(OBJDIR)/*.d
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
+ #| carlosm |     NA      | 17-Aug-2022 | Added delay services to project      |
 ################################################################################
