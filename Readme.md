@@ -138,3 +138,11 @@ Github personal access token
 https://stackoverflow.com/questions/35942754/how-can-i-save-username-and-password-in-git
 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
 
+/*****************************************************************************************************************************/
+Working following Autosar standard
+A new Baseline has been created (autosar_stm32f401e_baseline).
+Branches derived from autosar_stm32f401e_baseline shall follow next instructions:
+	(autosar_block)_(autosar_main-_layer)_(autosar_module)_(autosar_submodule).
+	i.e. bsw_mcal_iodrivers_diodriver
+	asw_(SWC_name)
+	asw_highbeams
