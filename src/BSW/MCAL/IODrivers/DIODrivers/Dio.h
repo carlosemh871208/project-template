@@ -126,5 +126,5 @@ extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level);
 #endif
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |             | 08-Sep-2022 | First version of Dio.h                                                     |
+ *| CMARTI  |    SAM-5    | 08-Sep-2022 | First version of Dio.h                                                     |
 **********************************************************************************************************************/
