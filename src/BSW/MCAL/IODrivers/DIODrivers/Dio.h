@@ -1,24 +1,18 @@
 /*********************************************************************************************************************/
-/*                                                 PORT SOURCE CODE                                                  */
+/*                                                INCLUDES GROUP                                                     */
 /*********************************************************************************************************************/
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
 /*!
- * $Source: Port.c $
+ * $Source: Port.h $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
- * $Date: 2022-03-17 $
+ * $Date: 2022-08-19 $
  */
 /*********************************************************************************************************************/
 /* DESCRIPTION :                                                                                                     */
-/** \Port.c
-    This module initializes the whole port structure of the microcontroller. Many ports and port pins can be assigned 
-    to various functionalities like e.g.
-    * General purpose I/O
-    * ADC
-    * SPI
-    * SCI
-    * PWM
+/** \Dio.h
+    Here we define types and function used by port driver.
  */
 /*********************************************************************************************************************/
 /* ALL RIGHTS RESERVED                                                                                               */
@@ -27,60 +21,23 @@
 /* not permitted without express written authority. Offenders will be liable                                         */
 /* for damages.                                                                                                      */
 /*********************************************************************************************************************/
-
+#ifndef DIO_H_
+#define DIO_H_
 /*                                                       Includes                                                    */
 /*********************************************************************************************************************/
-#include "Port.h"
 #include "std_types.h"
 #include "stm32F401re.h"
-
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-/*This shall changed according Microcontroller resources*/
-static const uint32_t GPIOClkEnable[6] = {RCC_AHB1ENR_GPIOAEN,RCC_AHB1ENR_GPIOBEN,RCC_AHB1ENR_GPIOCEN,
-                                   RCC_AHB1ENR_GPIODEN,RCC_AHB1ENR_GPIOEEN,RCC_AHB1ENR_GPIOHEN};
-static GPIO_TypeDef* PORTCfg[6]  = {GPIOA,GPIOB,GPIOC,GPIOD,GPIOE,GPIOH}; 
 
-/*                                             Port function definition                                              */
+/*                                                    Exported Variables                                             */
 /*********************************************************************************************************************/
-extern void Port_Init (const Port_ConfigType* ConfigPtr);
-extern void Port_SetPinDirection (Port_PinType Pin, Port_PinDirectionType Direction);
-extern void Port_RefreshPortDirection (void);
-extern void Port_GetVersionInfo (Std_VersionInfoType* versioninfo);
-extern void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode);
 
-/*                                           Port function implementation                                            */
+/*                                              Exported functions prototypes                                        */
 /*********************************************************************************************************************/
-extern void Port_Init (const Port_ConfigType* ConfigPtr)
-{
-    /*Enable Clock using to RCC AHB1ENR*/
-    RCC->AHB1ENR |= GPIOClkEnable[ConfigPtr->GPIOPortClkEn];
-    /*Set default Port pin value*/
-    PORTCfg[ConfigPtr->GPIOPortClkEn]->MODER |= ((ConfigPtr->PinDirection)<<(ConfigPtr->Pin<<1)); /*Set LED pin as output*/ 
-}
 
-extern void Port_SetPinDirection (Port_PinType Pin, Port_PinDirectionType Direction)
-{
-    
-}
-
-extern void Port_RefreshPortDirection (void)
-{
-
-}
-
-extern void Port_GetVersionInfo (Std_VersionInfoType* versioninfo)
-{
-
-}
-
-extern void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode)
-{
-
-}
-
+#endif
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |    SAM-2    | 18-Aug-2022 | Port.c standard version.                                                    |
- *| CMARTI  |    SAM-4    | 22-Aug-2022 | Port.c functions implementation.                                            |
+ *| CMARTI  |             | 08-Sep-2022 | First version of Dio.h                                                     |
 **********************************************************************************************************************/

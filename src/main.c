@@ -27,6 +27,7 @@
 #include "std_types.h"
 #include "stm32F401re.h"
 #include "application_delay.h"
+#include "Port.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
@@ -37,8 +38,10 @@
 /*********************************************************************************************************************/
 int main (void)
 {
-    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/   
+    //RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
+    //LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/   
+    Port_ConfigType output = {PA5,PORTA,PORT_PIN_OUT};
+    Port_Init(&output);
     for(;;)
     {
         LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
