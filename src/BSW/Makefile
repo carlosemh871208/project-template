@@ -11,6 +11,7 @@
 MALDIR  = ./MCAL
 HALDIR  = ./HAL
 SERDIR  = ./Services
+CDDDIR  = ./CDD
 
 bsw:
 	@echo
@@ -21,6 +22,8 @@ bsw:
 	@$(MAKE) -C $(HALDIR)
 	@echo
 	@$(MAKE) -C $(SERDIR)
+	@echo
+	@$(MAKE) -C $(CDDDIR)
 	@echo
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
