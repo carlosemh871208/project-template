@@ -4,7 +4,7 @@
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
 /*!
- * $Source: Port.h $
+ * $Source: Dio.h $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
  * $Date: 2022-08-19 $
@@ -29,7 +29,6 @@
 #include "stm32F401re.h"
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-<<<<<<< HEAD
 typedef unsigned char Dio_LevelType;
 typedef unsigned int Dio_ChannelType;
 
@@ -116,10 +115,9 @@ typedef unsigned int Dio_ChannelType;
 #define PH10 (Dio_ChannelType) 10u
 #define PH11 (Dio_ChannelType) 11u
 #define PH12 (Dio_ChannelType) 12u
-=======
+
 typedef unsigned int Dio_LevelType;
 typedef unsigned int Dio_ChannelType;
->>>>>>> cdd7175 (SAM-5: Added function prototypes according Autosar)
 
 #define STD_LOW		0x00
 #define STD_HIGH	0x01
@@ -128,11 +126,7 @@ typedef unsigned int Dio_ChannelType;
 
 /*                                              Exported functions prototypes                                        */
 /*********************************************************************************************************************/
-<<<<<<< HEAD
 extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level);
-=======
-extern void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level);
->>>>>>> cdd7175 (SAM-5: Added function prototypes according Autosar)
 
 #endif
 /***************************************************Log Projects*******************************************************

@@ -38,7 +38,6 @@ static GPIO_TypeDef* PORTCfg[6]  = {GPIOA,GPIOB,GPIOC,GPIOD,GPIOE,GPIOH};
 
 /*                                              Dio function definition                                              */
 /*********************************************************************************************************************/
-<<<<<<< HEAD
 extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level);
 
 /*                                            Dio function implementation                                            */
@@ -52,15 +51,6 @@ extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level)
     {
 
     }
-=======
-extern void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level);
-
-/*                                           Port function implementation                                            */
-/*********************************************************************************************************************/
-extern void Dio_WriteChannel(Dio_ChannelType ChannelId, Dio_LevelType Level)
-{
-
->>>>>>> cdd7175 (SAM-5: Added function prototypes according Autosar)
 }
 
 /***************************************************Log Projects*******************************************************
