@@ -34,15 +34,24 @@
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
+static GPIO_TypeDef* PORTCfg[6]  = {GPIOA,GPIOB,GPIOC,GPIOD,GPIOE,GPIOH}; 
 
-
-/*                                             Port function definition                                              */
+/*                                              Dio function definition                                              */
 /*********************************************************************************************************************/
+extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level);
 
-
-/*                                           Port function implementation                                            */
+/*                                            Dio function implementation                                            */
 /*********************************************************************************************************************/
+extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level)
+{
+    if(STD_LOW != Level)
+    {
+  
+    }else
+    {
 
+    }
+}
 
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
