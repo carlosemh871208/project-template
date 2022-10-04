@@ -41,7 +41,8 @@ ASWDIR  = ../src/ASW
 BSWDIR  = ../src/BSW
 RTEDIR  = ../src/RTE 
 
-PTDRVS = $(BSWDIR)/MCAL/IODrivers/PORTDrivers
+PTDRVS   = $(BSWDIR)/MCAL/IODrivers/PORTDrivers
+CDDUSART = $(BSWDIR)/CDD/USARTDriver
 
 # Precompiled libraries Directory
 LIBDIR = ../lib
@@ -60,14 +61,16 @@ OBJS   = $(OBJDIR)/main.o\
          $(OBJDIR)/stm32_startup.o\
 		 $(OBJDIR)/application_delay.o\
 		 $(OBJDIR)/delayServices.o\
-		 $(OBJDIR)/Port.o
+		 $(OBJDIR)/Port.o\
+		 $(OBJDIR)/usart.o\
+		 $(OBJDIR)/rcc.o
          
 #JLINK tool
 JLINK = /usr/bin/JLinkExe
 DEBUG = /usr/bin/JLinkGDBServer
 
 # Compilation flags
-CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(ASWINC) -I$(PTDRVS)
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(ASWINC) -I$(PTDRVS) -I$(CDDUSART)
 
 # Linker flags
 LFLAGS = -nostdlib -Wall -Werror -T $(LKRDIR)/stm32f401_ls.ld -Wl,-Map=$(BINDIR)/$(NAME).map

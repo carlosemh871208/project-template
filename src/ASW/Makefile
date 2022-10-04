@@ -24,6 +24,9 @@ OBJDIR   = ../../build/obj
 INCDIR   = ../../inc
 RTEDIR   = ../RTE
 SERDIR   = ../BSW/Services
+CDDDIR   = ../BSW/CDD
+
+CDDCOM   = ../BSW/CDD/USARTDriver
 
 #Services include paths
 DELDIR   = ../BSW/Services/Delay
@@ -34,14 +37,19 @@ ASWDIR =  ./Delay
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(RTEDIR) -I$(SERDIR) -I$(DELDIR)
 
-SRC = $(ASWDIR)/application_delay.c \
+SRC = $(ASWDIR)/application_delay.c
+COM = ./SerialCommunication/SerialCommGirbauProtocol.c
 
-OBJ = $(OBJDIR)/application_delay.o \
+OBJ = $(OBJDIR)/application_delay.o
+COMOBJ = $(OBJDIR)/SerialCommGirbauProtocol.o
 
 asw :
 	@echo "Executing Services Makefile"
 	@echo Compiling Delay folder source code.
 	$(CC) $(CFLAGS) $(SRC) -o $(OBJ)
+	@echo
+	@echo Compiling SerialCommunication folder source code.
+	$(CC) $(CFLAGS) -I$(CDDCOM) $(COM) -o $(COMOBJ)
 	@echo 
 
 # To add dependencies files

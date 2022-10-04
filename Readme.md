@@ -146,3 +146,7 @@ Branches derived from autosar_stm32f401e_baseline shall follow next instructions
 	i.e. bsw_mcal_iodrivers_diodriver
 	asw_(SWC_name)
 	asw_highbeams
+
+/*****************************************************************************************************************************/
+Following command is used to enable putty serial USB0
+sudo chmod 666 /dev/ttyUSB0 
