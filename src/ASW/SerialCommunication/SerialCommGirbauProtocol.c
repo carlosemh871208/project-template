@@ -140,6 +140,8 @@ extern uint8_t* ReceiveCommand (USART_Config* USARTPort)
 /*
 ** Return washer current status
 */
+
+/*
 static uint8_t GetWasherStatus (uint8_t* frame)
 {
     uint8_t wStatus = FAIL;
@@ -165,6 +167,8 @@ static uint8_t GetWasherStatus (uint8_t* frame)
     }
     return wStatus;
 }
+
+*/
 
 /*
 ** Return CRC of the frame

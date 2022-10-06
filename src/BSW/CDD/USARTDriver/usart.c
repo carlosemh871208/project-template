@@ -72,27 +72,27 @@ extern void USART_Init(const USART_Config* pUSARTHandle)
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN; //Enable GPIOA
 	/* Configure pins as alternate functions */
 	/* Configure TX */
-	GPIOA->MODER &= ~(0b11<<4); // Clean previous pin configuration 
-    GPIOA->MODER |=  (0b10<<4);   // Bits (5:4)= 1:0 --> Alternate Function for Pin PA2
+	GPIOA->MODER &= ~(0b11<<22); // Clean previous pin configuration 
+    GPIOA->MODER |=  (0b10<<22);   // Bits (5:4)= 1:0 --> Alternate Function for Pin PA11
 	/* Configure RX */
-	GPIOA->MODER &= ~(0b11<<6); // Clean previous pin configuration 
-    GPIOA->MODER |=  (0b10<<6);   // Bits (7:6)= 1:0 --> Alternate Function for Pin PA3
-	/* Configure GPIO AFRL Alternate Function Register  */
+	GPIOA->MODER &= ~(0b11<<24); // Clean previous pin configuration 
+    GPIOA->MODER |=  (0b10<<24);   // Bits (7:6)= 1:0 --> Alternate Function for Pin PA12
+	/* Configure GPIO AFR Alternate Function Register  */
 	/* TX */
-    GPIOA->AFR[0] &= ~(0b1111<<8); //Clean previous AFRL configuration
-    GPIOA->AFR[0]  |= (0b0111<<8);   // Bites (11:10:9:8) = 0:1:1:1  --> AF7 Alternate function for USART2 at Pin PA2
+    GPIOA->AFR[1] &= ~(0b1111<<12); //Clean previous AFRH configuration
+    GPIOA->AFR[1]  |= (0b1000<<12);   // Bites (11:10:9:8) = 0:1:1:1  --> AF7 Alternate function for USART2 at Pin PA11
 	/* RX */
-	GPIOA->AFR[0] &= ~(0b1111<<12); //Clean previous AFRL configuration
-	GPIOA->AFR[0]  |= (0b0111<<12);   // Bites (15:14:13:12) = 0:1:1:1  --> AF7 Alternate function for USART2 at Pin PA3
+	GPIOA->AFR[1] &= ~(0b1111<<16); //Clean previous AFRH configuration
+	GPIOA->AFR[1]  |= (0b1000<<16);   // Bites (15:14:13:12) = 0:1:1:1  --> AF7 Alternate function for USART2 at Pin PA12
     /* USART lines must be held high. So we need to pull_up resistors */
 	/* TX */
-	GPIOA->PUPDR &= ~(0b11<<4); //Clean previous configuration 
-	GPIOA->PUPDR |=  (0b01 <<4); //Set pull up resistor
+	GPIOA->PUPDR &= ~(0b11<<22); //Clean previous configuration 
+	GPIOA->PUPDR |=  (0b01<<22); //Set pull up resistor
 	/* RX */
-    GPIOA->PUPDR &= ~(0b11<<6); //Clean previous configuration 
-	GPIOA->PUPDR |=  (0b01 <<6); //Set pull up resistor
+    GPIOA->PUPDR &= ~(0b11<<24); //Clean previous configuration 
+	GPIOA->PUPDR |=  (0b01<<24); //Set pull up resistor
 	/* Enable ABP1 peripheral clock */
-	RCC->APB1ENR |= RCC_APB1ENR_USART2EN; //Enable USART2
+	RCC->APB2ENR |= RCC_APB2ENR_USART6EN; //Enable USART2
 	/*Configure USART*/
 	/*
 	 * Check startup code to see SysClock = 84 Mhz, AHB1 is working at 84 MHz and APB1 is working at 42 MHz
@@ -109,25 +109,25 @@ extern void USART_Init(const USART_Config* pUSARTHandle)
      * stopbits 2
      * */
 	/*  */
-	USART2->CR1 &= ~(1<<15); /*Oversampling 16*/
+	USART6->CR1 &= ~(1<<15); /*Oversampling 16*/
 	/*Configure Baudrate*/
-	USART2->BRR &= ~(0xFFFF); // Clear the mantisa and fraction
-	USART2->BRR |= (68<<4); // Mantisa
-	USART2->BRR |= (6<<0); //  Fraction
+	USART6->BRR &= ~(0xFFFF); // Clear the mantisa and fraction
+	USART6->BRR |= (136<<4); // Mantisa
+	USART6->BRR |= (12<<0); //  Fraction
 	/* Enable RX and TX */
-	USART2->CR1 |= (1<<2); // RE=1.. Enable the Receiver
-	USART2->CR1 |= (1<<3);  // TE=1.. Enable Transmitter
+	USART6->CR1 |= (1<<2); // RE=1.. Enable the Receiver
+	USART6->CR1 |= (1<<3);  // TE=1.. Enable Transmitter
 	/* Configure word lenght */
-	USART2->CR1 &= ~(1<<12); //Number of bits: 8 bits
+	USART6->CR1 &= ~(1<<12); //Number of bits: 8 bits
 	/* Configure Parity control*/
-	USART2->CR1 &= ~(1<<10); // Parity control disable 
+	USART6->CR1 &= ~(1<<10); // Parity control disable 
 	/* Configure STOP bits */
-	USART2->CR2 |= (2<<12); //Two stop bits 
+	USART6->CR2 |= (2<<12); //Two stop bits 
 	/* Configure RTS & CTS */
-	USART2->CR3 &= ~(1<<8); //Disable RTS
-	USART2->CR3 &= ~(1<<9); //Disable CTS
+	USART6->CR3 &= ~(1<<8); //Disable RTS
+	USART6->CR3 &= ~(1<<9); //Disable CTS
 	/*Enable USART*/
-	USART2->CR1 |= (1<<13);   // UE = 1... Enable USART
+	USART6->CR1 |= (1<<13);   // UE = 1... Enable USART
 }
 
 /*
@@ -196,9 +196,9 @@ void USART_SendChar (char c)
 		 the USART is disabled or enters the Halt mode to avoid corrupting the last transmission.
 	
 	****************************************/
-	while (!(USART2->SR & (1<<7))); //Check when TXE bit is cleared that means TDR register has been transmitted into shift register.
-	USART2->DR = (uint8)(c & 0xFFu);   // Load the Data
-	while (!(USART2->SR & (1<<6)));  // Wait for TC to SET.. This indicates that the data has been transmitted
+	while (!(USART6->SR & (1<<7))); //Check when TXE bit is cleared that means TDR register has been transmitted into shift register.
+	USART6->DR = (uint8)(c & 0xFFu);   // Load the Data
+	while (!(USART6->SR & (1<<6)));  // Wait for TC to SET.. This indicates that the data has been transmitted
 }
 
 

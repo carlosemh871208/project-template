@@ -27,6 +27,7 @@
 /*********************************************************************************************************************/
 #include "std_types.h" /*Can be changed this according AUTOSAR*/
 #include "stm32F401re.h" /* Depends on CleanReader microcontroller */
+#include "usart.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
@@ -36,6 +37,9 @@
 /* CRC definitions */
 #define DATABYTESIDX 1u /* Index to get number of data bytes from frame */
 #define HEADERBYTES  5u /* Number of header bytes*/
+
+/* First Byte Girbau frame */
+#define STX             0x02u
 
 /* Command IDs */
 #define READSTATUS      0x0Au
