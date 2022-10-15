@@ -4,15 +4,15 @@
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
 /*!
- * $Source: std_types.h $
+ * $Source: rcc.h $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
- * $Date: 2022-03-02 $
+ * $Date: 2022-09-21 $
  */
 /*********************************************************************************************************************/
 /* DESCRIPTION :                                                                                                     */
-/** \std_Types.h
-    Here we define all data types required by the project.
+/** \rcc.h
+    Here we define types and function used by usart driver.
  */
 /*********************************************************************************************************************/
 /* ALL RIGHTS RESERVED                                                                                               */
@@ -21,86 +21,62 @@
 /* not permitted without express written authority. Offenders will be liable                                         */
 /* for damages.                                                                                                      */
 /*********************************************************************************************************************/
-#ifndef STD_TYPES_H_
-#define STD_TYPES_H_
+#ifndef RCC_H_
+#define RCC_H_
 /*                                                       Includes                                                    */
 /*********************************************************************************************************************/
-
+#include "std_types.h"
+#include "stm32F401re.h"
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-/*Byte types definition*/
-typedef unsigned char  uint8;
-typedef signed   char  sint8;
+/* CFGR register macros */
+#define CFGRSWSMASK       0b11
+#define SHIFTRSWS            2
+#define HSI               0b00
+#define HSE               0b01
+#define PLL               0b10
+#define CLOCK16MHZ    16000000
+#define CLOCK8MHZ      8000000
 
-/*Word types definition*/
-typedef unsigned short uint16;
-typedef signed   short sint16;
+#define CFGRHPREMASK       0xF
+#define SHIFTRHPRE           4
+#define SYSCLKNOTDIV         8
+#define CLOCKONEDIV          1
 
-/*Long types definition*/
-typedef unsigned long  uint32;
-typedef signed   long  sint32;
+#define CFGRPPRE1MASK      0x7
+#define SHIFTRPPRE1         10 
+#define AHBCLKNOTDIV         4
+#define CFGRPPRE2MASK      0x7
+#define SHIFTRPPRE2         13
 
-/*Boolean type definition*/
-typedef uint8 boolean;
+/* RCC AHB1 Enable peripheral clock register macros */
+#define AHB1GPIOA (uint32)RCC_AHB1ENR_GPIOAEN /* Mask to enable clock to GPIOA */
+#define AHB1GPIOB (uint32)RCC_AHB1ENR_GPIOBEN /* Mask to enable clock to GPIOB */
+#define AHB1GPIOC (uint32)RCC_AHB1ENR_GPIOCEN /* Mask to enable clock to GPIOB */
+#define AHB1GPIOD (uint32)RCC_AHB1ENR_GPIODEN /* Mask to enable clock to GPIOD */
+#define AHB1GPIOE (uint32)RCC_AHB1ENR_GPIOEEN /* Mask to enable clock to GPIOE */
+#define AHB1GPIOH (uint32)RCC_AHB1ENR_GPIOHEN /* Mask to enable clock to GPIOH */
+#define AHB1CRC   (uint32)RCC_AHB1ENR_CRCEN   /* Mask to enable clock to CRC */
+#define AHB1DMA1  (uint32)RCC_AHB1ENR_DMA1EN  /* Mask to enable clock to DMA1 */
+#define AHB1DMA2  (uint32)RCC_AHB1ENR_DMA2EN  /* Mask to enable clock to DMA2 */
 
-#define FALSE (boolean)0u
-#define TRUE  (boolean)1u
-
-/*Null type definition*/
-#ifndef NULL
-    #define NULL (void*) 0u
-#endif
-
-/*Exit Program*/
-#define EXIT_PROGRAM (boolean) 0u
-
-/*Symbol definitions*/
-#ifndef STATUSTYPEDEFINED
-#define STATUSTYPEDEFINED
-typedef unsigned char StatusType; /*OSEK compliance*/
-#define E_OK       0x00u
-#endif
-#define E_NOT_OK   0x01u
-
-#define STD_HIGH   0x01u /* Physical state 5V or 3.3V */ 
-#define STD_LOW    0x00u /* Physical state 0V */
-
-#define STD_ACTIVE 0x01u /* #define STD_IDLE 0x00u */
-#define STD_IDLE   0x00u /* Logical state idle */
-
-#define STD_OFF    0x00u
-#define STD_ON     0x01u
-
-/*
-* Std_ReturnType
-* This type can be used as standard API return type which is shared between the RTE and the BSW modules. It shall be 
-* defined as follows: typedef uint8 Std_ReturnType;
-*/
-typedef uint8 Std_ReturnType;
-
-/*
-* Std_VersionInfoType
-* This type shall be used to request the version of a BSW module using the <Module name>_GetVersionInfo() function.
-*/
-typedef struct
-{
-    /* data */
-    uint16 vendorID;
-    uint16 moduleID;
-    uint8  sw_major_version;
-    uint8  sw_minor_version;
-    uint8  sw_patch_version;
-}Std_VersionInfoType;
+/* Status register macros */
+#define DISABLE (uint8)0u
+#define ENABLE  (uint8)1u
 
 /*                                                    Exported Variables                                             */
 /*********************************************************************************************************************/
 
 /*                                              Exported functions prototypes                                        */
 /*********************************************************************************************************************/
+extern uint32 RCC_GetPCLK1Value(void);
+extern uint32 RCC_GetPCLK2Value(void);
+extern uint32 RCC_GetPLLOutputClock(void);
+extern void   RCC_AHB1PeripheralClockControl(uint32 peripheral,uint8 status);
+extern uint8  RCC_GetClkAHB1PeripheralSts(uint32 peripheral);
 
-#endif /* STD_TYPES_H_ */
-
+#endif
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |     NA      | 28-Apr-2021 | First version of Std_Types.h                                                |
+ *| CMARTI  |             | 23-Sep-2022 | First version of rcc.h                                                      |
 **********************************************************************************************************************/

@@ -27,24 +27,47 @@
 #include "std_types.h"
 #include "stm32F401re.h"
 #include "application_delay.h"
+#include "Port.h"
+#include "SerialCommGirbauProtocol.h"
+#include "usart.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
 #define LED_GPIO        GPIOA
 #define LED_PIN         5
 
+USART_Config GirbauSerProt = {USART6,
+                              USART_STD_BAUD_38400,
+                              USART_MODE_TXRX,
+                              USART_STOPBITS_2,
+                              USART_WORDLEN_8BITS,
+                              USART_PARITY_DISABLE,
+                              USART_PARITY_EN_EVEN,
+                              USART_HW_FLOW_CTRL_NONE
+};
+
+uint8 GirbauMsg[50] = {STX,0x00u,1,READSTATUS,0x00u};
+
 /*                                           Main function implementation                                            */
 /*********************************************************************************************************************/
 int main (void)
 {
-    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/   
+    //RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
+    //LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/ 
+    Port_ConfigType output = {PA5,PORTA,PORT_PIN_OUT};
+    Port_Init(&output);
+    USART_Init(&GirbauSerProt);
     for(;;)
     {
-        LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
-        set_delay_mS(2000);
+        //SendCommand(&GirbauSerProt,GirbauMsg);
+        USART_SendChar('N');
+        if('N' == USART_GetChar())
+        {
+            LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
+        }
+        set_delay_mS(4000);
         LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
-        set_delay_mS(2000);
+        set_delay_mS(4000);
     }
     return EXIT_PROGRAM;
 }

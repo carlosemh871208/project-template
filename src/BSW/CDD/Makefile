@@ -24,28 +24,35 @@ OBJDIR   = ../../../build/obj
 INCDIR   = ../../../inc
 
 #MCAL paths
-IODDIR =  ./IODrivers
-DIODIR =  $(IODDIR)/DIODrivers
-PORDIR =  $(IODDIR)/PORTDrivers
+USARTDIR =  ./USARTDriver
+RCCDIR   =  ./RCCDriver
 
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
-SRC = $(PORDIR)/Port.c \
+USARTSRC = $(USARTDIR)/usart.c 
+RCCSRC   = $(RCCDIR)/rcc.c
 
-OBJ = $(OBJDIR)/Port.o \
+USARTOBJ = $(OBJDIR)/usart.o 
+RCCOBJ   = $(OBJDIR)/rcc.o
 
 ser :
-	@echo "Executing MCAL Makefile"
-	@echo Entering IODrivers.
-	@echo Compiling PORTDrivers folder source code.
-	$(CC) $(CFLAGS) $(SRC) -o $(OBJ)
+	@echo "Executing CDD Makefile"
+	@echo Entering USARTDriver.
+	@echo Compiling USARTDriver folder source code.
+	$(CC) $(CFLAGS) -I$(RCCDIR) $(USARTSRC) -o $(USARTOBJ)
+	@echo Leaving USARTDriver folder
+	@echo
+	@echo Entering RCCDriver.
+	@echo Compiling RCCDriver folder source code.
+	$(CC) $(CFLAGS) $(RCCSRC) -o $(RCCOBJ)
+	@echo Leaving RCCDriver folder
 	@echo 
 
 # To add dependencies files
 -include $(OBJDIR)/*.d
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
- #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
- #| carlosm |     NA      | 23-Aug-2022 | PORTDriver project integration       |
+ #| carlosm |     NA      | 21-Sep-2022 | First version of Makefile            |
+ #| carlosm |     NA      | 23-Sep-2022 | Adedd RCC drivers                    | 
 ################################################################################

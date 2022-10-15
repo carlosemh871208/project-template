@@ -33,13 +33,17 @@ BINDIR = bin
 
 # Includes Directory
 INCDIR   = ../inc
-ASWINC   = ../src/ASW/Delay \
+ASWINC   = ../src/ASW/Delay 
+ASWINC1  = ../src/ASW/SerialCommunication
 
 # Source Directories
 SRCDIR  = ../src
 ASWDIR  = ../src/ASW
 BSWDIR  = ../src/BSW
 RTEDIR  = ../src/RTE 
+
+PTDRVS   = $(BSWDIR)/MCAL/IODrivers/PORTDrivers
+CDDUSART = $(BSWDIR)/CDD/USARTDriver
 
 # Precompiled libraries Directory
 LIBDIR = ../lib
@@ -57,14 +61,18 @@ TGTHEX = $(BINDIR)/$(NAME).hex
 OBJS   = $(OBJDIR)/main.o\
          $(OBJDIR)/stm32_startup.o\
 		 $(OBJDIR)/application_delay.o\
-		 $(OBJDIR)/delayServices.o
+		 $(OBJDIR)/delayServices.o\
+		 $(OBJDIR)/Port.o\
+		 $(OBJDIR)/usart.o\
+		 $(OBJDIR)/rcc.o\
+		 $(OBJDIR)/SerialCommGirbauProtocol.o
          
 #JLINK tool
 JLINK = /usr/bin/JLinkExe
 DEBUG = /usr/bin/JLinkGDBServer
 
 # Compilation flags
-CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(ASWINC)
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(ASWINC) -I$(ASWINC1) -I$(PTDRVS) -I$(CDDUSART)
 
 # Linker flags
 LFLAGS = -nostdlib -Wall -Werror -T $(LKRDIR)/stm32f401_ls.ld -Wl,-Map=$(BINDIR)/$(NAME).map

@@ -4,21 +4,21 @@
 /*                                               OBJECT SPECIFICATION                                                */
 /*********************************************************************************************************************/
 /*!
- * $Source: Port.c $
+ * $Source: Dio.c $
  * $Revision: Version 1.0 $
  * $Author: Carlos Martinez $
  * $Date: 2022-03-17 $
  */
 /*********************************************************************************************************************/
 /* DESCRIPTION :                                                                                                     */
-/** \Port.c
-    This module initializes the whole port structure of the microcontroller. Many ports and port pins can be assigned 
-    to various functionalities like e.g.
-    * General purpose I/O
-    * ADC
-    * SPI
-    * SCI
-    * PWM
+/** \Dio.c
+    This specification specifies the functionality, API and the configuration of the AUTOSAR Basic Software module 
+    DIO Driver.
+    This specification is applicable to drivers only for on chip DIO pins and ports.
+    The DIO Driver provides services for reading and writing to/from
+        * DIO Channels (Pins)
+        * DIO Ports
+    * DIO Channel Groups
  */
 /*********************************************************************************************************************/
 /* ALL RIGHTS RESERVED                                                                                               */
@@ -30,57 +30,30 @@
 
 /*                                                       Includes                                                    */
 /*********************************************************************************************************************/
-#include "Port.h"
-#include "std_types.h"
-#include "stm32F401re.h"
+#include "Dio.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
-/*This shall changed according Microcontroller resources*/
-static const uint32_t GPIOClkEnable[6] = {RCC_AHB1ENR_GPIOAEN,RCC_AHB1ENR_GPIOBEN,RCC_AHB1ENR_GPIOCEN,
-                                   RCC_AHB1ENR_GPIODEN,RCC_AHB1ENR_GPIOEEN,RCC_AHB1ENR_GPIOHEN};
 static GPIO_TypeDef* PORTCfg[6]  = {GPIOA,GPIOB,GPIOC,GPIOD,GPIOE,GPIOH}; 
 
-/*                                             Port function definition                                              */
+/*                                              Dio function definition                                              */
 /*********************************************************************************************************************/
-extern void Port_Init (const Port_ConfigType* ConfigPtr);
-extern void Port_SetPinDirection (Port_PinType Pin, Port_PinDirectionType Direction);
-extern void Port_RefreshPortDirection (void);
-extern void Port_GetVersionInfo (Std_VersionInfoType* versioninfo);
-extern void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode);
+extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level);
 
-/*                                           Port function implementation                                            */
+/*                                            Dio function implementation                                            */
 /*********************************************************************************************************************/
-extern void Port_Init (const Port_ConfigType* ConfigPtr)
+extern void Dio_WriteChannel (Dio_ChannelType ChannelId, Dio_LevelType Level)
 {
-    /*Enable Clock using to RCC AHB1ENR*/
-    RCC->AHB1ENR |= GPIOClkEnable[ConfigPtr->GPIOPortClkEn];
-    /*Set default Port pin value*/
-    PORTCfg[ConfigPtr->GPIOPortClkEn]->MODER |= ((ConfigPtr->PinDirection)<<(ConfigPtr->Pin<<1)); /*Set LED pin as output*/ 
-}
+    if(STD_LOW != Level)
+    {
+  
+    }else
+    {
 
-extern void Port_SetPinDirection (Port_PinType Pin, Port_PinDirectionType Direction)
-{
-    
-}
-
-extern void Port_RefreshPortDirection (void)
-{
-
-}
-
-extern void Port_GetVersionInfo (Std_VersionInfoType* versioninfo)
-{
-
-}
-
-extern void Port_SetPinMode (Port_PinType Pin, Port_PinModeType Mode)
-{
-
+    }
 }
 
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
- *| CMARTI  |    SAM-2    | 18-Aug-2022 | Port.c standard version.                                                    |
- *| CMARTI  |    SAM-4    | 22-Aug-2022 | Port.c functions implementation.                                            |
+ *| CMARTI  |             | 08-Sep-2022 | dio.c standard version.                                                    |
 **********************************************************************************************************************/
