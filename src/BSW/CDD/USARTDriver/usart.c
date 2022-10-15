@@ -51,15 +51,23 @@
 /*                                              Dio function definition                                              */
 /*********************************************************************************************************************/
 extern void  USART_Init(const USART_Config* pUSARTHandle);
-extern void  USART_DeInit(const USART_Config* pUSARTHandle);
-extern void  USART_SendData (const USART_Config* pUSARTHandle, uint8* pTxBuffer, uint32 Lenght);
-extern void  USART_ReceiveData (const USART_Config* pUSARTHandle, uint8* pRxBuffer, uint32 Lenght);
 extern void  USART_SetBaudRate(const USART_Config* pUSARTHandle);
-extern void  USART_PeriClockControl(const USART_Config* pUSARTHandle, uint8 EnorDi);
-extern void  USART_PeripheralControl(const USART_Config* pUSARTHandle, uint8 EnOrDi);
-extern uint8 USART_GetFlagStatus(const USART_Config* pUSARTHandle, uint8 StatusFlagName);
+extern uint8 USART_GetOversamplingMode(const USART_Config* pUSARTHandle);
 extern void  USART_SendChar(char c);
 extern uint8 USART_GetChar(void);
+
+/* RCC depending functions */
+extern uint8  RCC_GetSystemClockSource(void);
+extern uint8  RCC_GetPLLClockSource(void);
+extern uint32 RCC_GetSystemClockFrequency(void);
+extern uint8  RCC_GetPLLPDivisorFactor(void);
+extern uint16 RCC_GetPLLNMultiplicatorFactor(void);
+extern uint8  RCC_GetPLLMDivisionFactor(void); 
+extern uint32 RCC_GetFrequencyVCOClock(uint32 PLLClkInput);
+extern uint32 RCC_GetPLL48ClockFrequency(void);
+extern uint16 RCC_GetAHBClockDivisionFactor(void);
+extern uint8  RCC_GetAPB1ClockDivisionFactor(void); 
+extern uint8  RCC_GetAPB2ClockDivisionFactor(void); 
 
 /*                                            Dio function implementation                                            */
 /*********************************************************************************************************************/
@@ -111,9 +119,7 @@ extern void USART_Init(const USART_Config* pUSARTHandle)
 	/*  */
 	USART6->CR1 &= ~(1<<15); /*Oversampling 16*/
 	/*Configure Baudrate*/
-	USART6->BRR &= ~(0xFFFF); // Clear the mantisa and fraction
-	USART6->BRR |= (136<<4); // Mantisa
-	USART6->BRR |= (12<<0); //  Fraction
+	USART_SetBaudRate(pUSARTHandle);
 	/* Enable RX and TX */
 	USART6->CR1 |= (1<<2); // RE=1.. Enable the Receiver
 	USART6->CR1 |= (1<<3);  // TE=1.. Enable Transmitter
@@ -134,57 +140,39 @@ extern void USART_Init(const USART_Config* pUSARTHandle)
 **  USART Deinitialization: When CR1 UE is cleared, the USART prescalers and outputs are stopped and the end 
 **                          of the current byte transfer in order to reduce power consumption. 
 */
-extern void USART_DeInit(const USART_Config* pUSARTHandle)
+
+/*
+** Get Oversampling mode used by USART_SetBaudRate
+*/
+extern uint8 USART_GetOversamplingMode(const USART_Config* pUSARTHandle)
 {
-	
+	return (uint8)((pUSARTHandle->USART_Port->CR1 & OVERSAMPMSK) >> OVERSAMPRSH);
 }
 
 /*
-**  Send Data string
+** USAR Baud rate configuration: Configures chosen baudrate.
 */
-extern void USART_SendData (const USART_Config* pUSARTHandle, uint8* pTxBuffer, uint32 Lenght)
+extern void  USART_SetBaudRate(const USART_Config* pUSARTHandle)
 {
-	
+	uint32 FScrClk     = RCC_GetSystemClockFrequency();
+	uint32 Denominador = 1u;
+	uint32 Fraction    = 0u;
+	uint16 Mantissa    = 0u;
+	uint8  Over8       = USART_GetOversamplingMode(pUSARTHandle);
+	Denominador = (8u*(2u-Over8)*pUSARTHandle->USART_Baud);
+	pUSARTHandle->USART_Port->BRR &= ~(CLEANBRRREG);
+	Mantissa = (uint16)(FScrClk/Denominador);
+	Fraction = (uint32)(FScrClk - (Mantissa * Denominador));
+	Fraction = (uint32)(Fraction * 10u)/Denominador;
+	Fraction = (uint32)(Fraction * 16u)/10u;
+	pUSARTHandle->USART_Port->BRR |= (Mantissa << MANTLSHIFT);
+	pUSARTHandle->USART_Port->BRR |= ((uint8)Fraction << FRACLSHIFT);
 }
+
 
 /*
-** Receive data string
+** USART send character: 
 */
-extern void USART_ReceiveData (const USART_Config* pUSARTHandle, uint8* pRxBuffer, uint32 Lenght)
-{
-	
-}
-
-/*
-** Set Baud rate
-*/
-extern void USART_SetBaudRate(const USART_Config* pUSARTHandle)
-{
-   
-}
-
-/*
-** Enable the Clock for given USART peripheral
-*/
-extern void USART_PeriClockControl(const USART_Config* pUSARTHandle, uint8 EnorDi)
-{
-	
-}
-
-extern void USART_PeripheralControl (const USART_Config* pUSARTHandle, uint8 EnOrDi)
-{
-	
-}
-
- 
- /*
- **
- */
-extern uint8 USART_GetFlagStatus(const USART_Config* pUSARTHandle, uint8 StatusFlagName)
-{
-	return 0u;
-}
-
 void USART_SendChar (char c)
 {
 	/*********** STEPS FOLLOWED *************
@@ -211,12 +199,273 @@ uint8 USART_GetChar (void)
 	
 	****************************************/
 	uint8 Temp;
-	
-	while (!(USART2->SR & (1<<5)));  // Wait for RXNE to SET.. This indicates that the data has been Received
-	Temp = USART2->DR & 0xFF;  // Read the data. 
+	while (!(USART6->SR & (1<<5)));  // Wait for RXNE to SET.. This indicates that the data has been Received
+	Temp = USART6->DR & 0xFF;  // Read the data. 
 	return Temp;
 }
 
+
+extern uint8 RCC_GetSystemClockSource(void)
+{
+	uint8 SysClkSrc = SRCNOTAPP;
+	if(HSISYSCLK == ((RCC->CFGR & SYSCLKMSK) >> SYSCLKSHR))
+	{
+        SysClkSrc = HSISYSCLK;
+	}else if(HSESYSCLK == ((RCC->CFGR & SYSCLKMSK) >> SYSCLKSHR))
+	{
+        SysClkSrc = HSESYSCLK;
+	}else if(PLLSYSCLK == ((RCC->CFGR & SYSCLKMSK) >> SYSCLKSHR))
+	{
+        SysClkSrc = PLLSYSCLK;
+	}
+	return SysClkSrc;
+}
+
+extern uint8 RCC_GetPLLClockSource(void)
+{
+	uint8 PllClkSrc = NOTDEFINED;
+	if(HSISRCPLL == ((RCC->PLLCFGR & PLLSRCMSK) >> PLLSRCSHR))
+	{
+		PllClkSrc = HSISRCPLL;
+	}else if(HSESRCPLL == ((RCC->PLLCFGR & PLLSRCMSK) >> PLLSRCSHR))
+	{
+		PllClkSrc = HSESRCPLL; 
+	}
+	return PllClkSrc;
+}
+
+extern uint32 RCC_GetSystemClockFrequency(void)
+{
+	uint32 SysClock = (uint32)NOTDEFINED;
+	uint32 Fvco = 0u;
+	uint8  PLLP = RCC_GetPLLPDivisorFactor();
+	if(HSISYSCLK == RCC_GetSystemClockSource())
+	{
+        SysClock = HSICLKFREQ;
+	}else if(HSESYSCLK == RCC_GetSystemClockSource())
+	{
+        SysClock = HSECLKFREQ;
+	}else if(PLLSYSCLK == RCC_GetSystemClockSource())
+	{
+		if(HSISRCPLL == RCC_GetPLLClockSource())
+		{
+            Fvco = RCC_GetFrequencyVCOClock(HSICLKFREQ);
+		}else if(HSESRCPLL == RCC_GetPLLClockSource())
+		{
+            Fvco = RCC_GetFrequencyVCOClock(HSECLKFREQ);
+		}
+		if(ZERODIV == PLLP)
+		{
+			SysClock = SYSCLKERR;
+		}else if(ZERODIV != PLLP)
+		{
+			SysClock = (uint32) (Fvco/PLLP);
+			if(SysClock > MAXMCUFREQ)
+			{
+				SysClock = SYSCLKERR;
+			}else if(SysClock <= MAXMCUFREQ)
+			{
+				SysClock = SysClock & FREQCLKMSK;
+			}
+		}
+	}
+	return SysClock;
+}
+
+extern uint8  RCC_GetPLLPDivisorFactor(void)
+{
+    uint8 PLLP = (uint8)((RCC->PLLCFGR & PLLPMASK) >> PLLPRSHFT);
+	if(PLLDIV2 == (PLLP & 0x3))
+	{
+        PLLP = PLLDIVVAL2;
+	}else if(PLLDIV4 == (PLLP & 0x3))
+	{
+        PLLP = PLLDIVVAL4;
+	}else if(PLLDIV6 == (PLLP & 0x3))
+	{
+        PLLP = PLLDIVVAL6;
+	}else if(PLLDIV6 == (PLLP & 0x3))
+	{
+        PLLP = PLLDIVVAL8;
+	}
+	return PLLP;
+}
+
+extern uint16 RCC_GetPLLNMultiplicatorFactor(void)
+{
+	uint16 PLLN = (uint16)((RCC->PLLCFGR & PLLNMASK) >> PLLNRSHFT);
+	if((0u <= (PLLN & PLLNFILTER)) && (192u > (PLLN & PLLNFILTER)))
+	{
+		PLLN = (uint16)PLLNWNGCFG;
+	}else if((432u < (PLLN & PLLNFILTER)) && (511u >= (PLLN & PLLNFILTER)))
+	{
+		PLLN = (uint16)PLLNWNGCFG;
+	}else if((192u <= (PLLN & PLLNFILTER)) && (432u >= (PLLN & PLLNFILTER)))
+	{
+		PLLN = (uint16)(PLLN & PLLNFILTER);
+	}
+	return PLLN;
+}
+
+extern uint8  RCC_GetPLLMDivisionFactor(void){
+	uint8 PLLM = (uint8)((RCC->PLLCFGR & PLLMMASK) >> PLLMRSHFT);
+	if((0u <= (PLLM & PLLMFILTER)) && (2u > (PLLM & PLLMFILTER)))
+	{
+		PLLM = (uint8)PLLMWNGCFG;
+
+	}else if((2u <= (PLLM & PLLMFILTER)) && (63u >= (PLLM & PLLMFILTER)))
+	{
+		PLLM = (uint8)(PLLM & PLLMFILTER);
+	}
+	return PLLM;
+}
+
+extern uint8  RCC_GetPLLQDivisorFactor(void)
+{
+	uint8 PLLQ = (uint8)((RCC->PLLCFGR & PLLQMASK) >> PLLQRSHFT);
+	if((0u <= (PLLQ & PLLQFILTER)) && (2u > (PLLQ & PLLQFILTER)))
+	{
+		PLLQ = (uint8)PLLQWNGCFG;
+
+	}else if((2u <= (PLLQ & PLLQFILTER)) && (15u >= (PLLQ & PLLQFILTER)))
+	{
+		PLLQ = (uint8)(PLLQ & PLLQFILTER);
+	}
+	return PLLQ;
+}
+
+extern uint32  RCC_GetFrequencyVCOClock(uint32 PLLClkInput)
+{
+	uint32 FvcoClk = 0;
+	uint16 PLLN = RCC_GetPLLNMultiplicatorFactor();
+	uint8  PLLM = RCC_GetPLLMDivisionFactor();
+	if((PLLNWNGCFG != PLLN) && (PLLMWNGCFG != PLLM) && (ZERODIV != PLLM))
+	{
+		FvcoClk = (uint32)(PLLClkInput * (PLLN/PLLM));
+	}else if((PLLNWNGCFG == PLLN) && (PLLMWNGCFG == PLLM) && (ZERODIV == PLLM))
+	{
+		FvcoClk = (uint32)FVCOCLKWRG;
+	}
+
+	return FvcoClk;
+}
+
+extern uint32 RCC_GetPLL48ClockFrequency(void)
+{
+	uint32 Sys48Clk = (uint32)NOTDEFINED;
+	uint32 Fvco = 0u;
+	uint8  PLLQ = RCC_GetPLLQDivisorFactor();
+	if(HSISYSCLK == RCC_GetSystemClockSource())
+	{
+        Sys48Clk = HSICLKFREQ;
+	}else if(HSESYSCLK == RCC_GetSystemClockSource())
+	{
+        Sys48Clk = HSECLKFREQ;
+	}else if(PLLSYSCLK == RCC_GetSystemClockSource())
+	{
+		if(HSISRCPLL == RCC_GetPLLClockSource())
+		{
+            Fvco = RCC_GetFrequencyVCOClock(HSICLKFREQ);
+		}else if(HSESRCPLL == RCC_GetPLLClockSource())
+		{
+            Fvco = RCC_GetFrequencyVCOClock(HSECLKFREQ);
+		}
+		if(ZERODIV == PLLQ)
+		{
+			Sys48Clk = SYSCLKERR;
+		}else if(ZERODIV != PLLQ)
+		{
+			Sys48Clk = (uint32) (Fvco/PLLQ);
+			if(Sys48Clk > PLL48CLOCK)
+			{
+				Sys48Clk = SYSCLKERR;
+			}else if(Sys48Clk <= PLL48CLOCK)
+			{
+				Sys48Clk = Sys48Clk & FREQCLKMSK;
+			}
+		}
+	}
+	return Sys48Clk;
+}
+
+extern uint16  RCC_GetAHBClockDivisionFactor(void)
+{
+	uint16 AHBprescaler = (uint16)((RCC->CFGR & AHBMASK) >> AHBRSHFT);
+	if((0b0000u == AHBprescaler) || (0b0001u == AHBprescaler) || (0b0010u == AHBprescaler) || (0b0011u == AHBprescaler) ||
+	   (0b0100u == AHBprescaler) || (0b0101u == AHBprescaler) || (0b0110u == AHBprescaler) || (0b0111u == AHBprescaler))
+	{
+		AHBprescaler = SYSCLKNDIV;
+	}else if(0b1000u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV2;
+	}else if(0b1001u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV4;
+	}else if(0b1010u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV8;
+	}else if(0b1011u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV16;
+	}else if(0b1100u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV64;
+	}else if(0b1101u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV128;
+	}else if(0b1110u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV256;
+	}else if(0b1111u == AHBprescaler)
+	{
+		AHBprescaler = SYSCLKDIV512;
+	}
+	return (uint16)AHBprescaler;
+}
+
+extern uint8  RCC_GetAPB1ClockDivisionFactor(void)
+{
+	uint8 APB1prescaler = ((RCC->CFGR & APB1MASK) >> APB1RSHFT);
+	if((0b000u == APB1prescaler) || (0b001u == APB1prescaler) || (0b010u == APB1prescaler) || (0b11u == APB1prescaler))
+	{
+		APB1prescaler = AHBNOTDIV;
+	}else if(0b100u == APB1prescaler)
+	{
+		APB1prescaler = AHBDIVBY2;
+	}else if(0b101u == APB1prescaler)
+	{
+		APB1prescaler = AHBDIVBY4;
+	}else if(0b110u == APB1prescaler)
+	{
+		APB1prescaler = AHBDIVBY8;
+	}else if(0b111u == APB1prescaler)
+	{
+		APB1prescaler = AHBDIVBY16;
+	}
+	return APB1prescaler;
+}
+
+extern uint8  RCC_GetAPB2ClockDivisionFactor(void)
+{
+	uint8 APB2prescaler = ((RCC->CFGR & APB2MASK) >> APB2RSHFT);
+	if((0b000u == APB2prescaler) || (0b001u == APB2prescaler) || (0b010u == APB2prescaler) || (0b11u == APB2prescaler))
+	{
+		APB2prescaler = AHBNOTDIV;
+	}else if(0b100u == APB2prescaler)
+	{
+		APB2prescaler = AHBDIVBY2;
+	}else if(0b101u == APB2prescaler)
+	{
+		APB2prescaler = AHBDIVBY4;
+	}else if(0b110u == APB2prescaler)
+	{
+		APB2prescaler = AHBDIVBY8;
+	}else if(0b111u == APB2prescaler)
+	{
+		APB2prescaler = AHBDIVBY16;
+	}
+	return APB2prescaler;
+}
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |
  *| CMARTI  |             | 21-Sep-2022 | usart.c standard version.                                                   |

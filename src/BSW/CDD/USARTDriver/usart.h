@@ -45,6 +45,19 @@ typedef struct
 }USART_Config;
 
 /*
+** Oversampling mode
+*/
+#define OVERSAMPMSK        0x8000
+#define OVERSAMPRSH        15u
+
+#define OVERSAMP16         0u
+#define OVERSAMP8          1u
+
+#define CLEANBRRREG        0xFFFFu
+#define MANTLSHIFT         4u
+#define FRACLSHIFT         0u
+
+/*
  *@USART_Mode
  *Possible options for USART_Mode
  */
@@ -145,6 +158,96 @@ typedef struct
 #define USART2PCCDIS 0xFFFDFFFFu
 #define USART6PCCDIS 0xFFFFFFDFu
 
+/*
+** RCC defines
+*/
+#define NOTDEFINED 0x00u
+
+#define HSICLKFREQ 16000000u /* Check values provided by Microcontroller user manual */
+#define HSECLKFREQ 20000000u /* Check value from external oscillator */
+#define MAXMCUFREQ 84000000u /* Check values provided by Microcontroller user manual */
+#define PLL48CLOCK 48000000u /* Check values provided by Microcontroller user manual */
+
+/*System clock sources*/
+#define HSISYSCLK  0b00u
+#define HSESYSCLK  0b01u
+#define PLLSYSCLK  0b10u
+#define SRCNOTAPP  0b11u
+
+#define SYSCLKMSK  0xCu
+#define SYSCLKSHR  2u
+#define SYSCLKERR  0xFFFFFFFFu
+
+#define PLLNMASK   0x7FC0u
+#define PLLNRSHFT  6u
+#define PLLPMASK   0x30000u
+#define PLLPRSHFT  16u
+#define PLLMMASK   0x3Fu
+#define PLLMRSHFT  0u
+#define PLLQMASK   0xF000000u
+#define PLLQRSHFT  24u
+
+#define PLLDIV2    0b00u
+#define PLLDIV4    0b01u
+#define PLLDIV6    0b10u
+#define PLLDIV8    0b11u
+
+#define PLLDIVVAL2 2u
+#define PLLDIVVAL4 4u
+#define PLLDIVVAL6 6u
+#define PLLDIVVAL8 8u
+
+#define PLLNWNGCFG 0xFFFFu
+#define PLLNFILTER 0x1FFu
+
+#define PLLMWNGCFG 0xFFu
+#define PLLMFILTER 0x3Fu
+
+#define PLLQWNGCFG 0xFFu
+#define PLLQFILTER 0xFu
+
+/* PLL clock sources*/
+#define HSISRCPLL  0u
+#define HSESRCPLL  1u
+
+#define PLLSRCMSK  0x400000  
+#define PLLSRCSHR  22u
+
+#define ZERODIV    0u
+
+#define FVCOCLKWRG  0xFFFFFFFFu
+
+#define FREQCLKMSK  0x1FFFFFFFu
+#define FQ48CLKMSK  0x3FFFFFFu
+
+/*AHB prescaler*/
+#define AHBMASK     0xF0u
+#define AHBRSHFT    4u
+
+#define SYSCLKNDIV    1u
+#define SYSCLKDIV2    2u
+#define SYSCLKDIV4    4u
+#define SYSCLKDIV8    8u
+#define SYSCLKDIV16   16u
+#define SYSCLKDIV64   64u
+#define SYSCLKDIV128  128u
+#define SYSCLKDIV256  256u
+#define SYSCLKDIV512  512u
+
+/* APB1 prescaler */
+#define APB1MASK      0x1C00u
+#define APB1RSHFT     10u
+
+/* APB2 prescaler */
+#define APB2MASK      0xE000u
+#define APB2RSHFT     13u
+
+#define AHBNOTDIV     1u
+#define AHBDIVBY2     2u
+#define AHBDIVBY4     4u
+#define AHBDIVBY8     8u
+#define AHBDIVBY16    16u
+
 /*                                                    Exported Variables                                             */
 /*********************************************************************************************************************/
 
@@ -153,7 +256,18 @@ typedef struct
 /*
  ** Peripheral Clock setup
  */
-extern void USART_PeriClockControl(const USART_Config* pUSARTHandle, uint8 EnorDi);
+extern uint8  RCC_GetSystemClockSource(void);                     /* Get System Clock source */
+extern uint8  RCC_GetPLLClockSource(void);                        /* Get clock source using by PLL*/
+extern uint32 RCC_GetSystemClockFrequency(void);                  /* Get System Clock Frequency */
+extern uint8  RCC_GetPLLPDivisorFactor(void);                     /* Get the PLLP divisor factor */
+extern uint16 RCC_GetPLLNMultiplicatorFactor(void);               /* Get the PLLN multiplicator factor*/
+extern uint8  RCC_GetPLLMDivisionFactor(void);                    /* Get the PLLM division factor */
+extern uint8  RCC_GetPLLQDivisorFactor(void);                     /* Get the PLLQ divisor factor */
+extern uint32 RCC_GetFrequencyVCOClock(uint32 PLLClkInput);       /* Get the Frequency VCO */
+extern uint32 RCC_GetPLL48ClockFrequency(void);                   /* Get Clock frequency for USB OTG, SDO*/
+extern uint16 RCC_GetAHBClockDivisionFactor(void);                /* Get ABH prescaler Division factor */
+extern uint8  RCC_GetAPB1ClockDivisionFactor(void);               /* Get APB1 prescaler Division factor */
+extern uint8  RCC_GetAPB2ClockDivisionFactor(void);               /* Get APB2 prescaler Division factor */
 
 /*
  ** Init and De-init
@@ -164,35 +278,29 @@ extern void USART_DeInit(const USART_Config* pUSARTHandle);
 /*
 ** Set Baud rate
 */
-extern void USART_SetBaudRate(const USART_Config* pUSARTHandle);
-
+extern uint8 USART_GetOversamplingMode(const USART_Config* pUSARTHandle);
+extern void  USART_SetBaudRate(const USART_Config* pUSARTHandle);
 /*
  * Data Send and Receive
  */
-extern void USART_SendData (const USART_Config* pUSARTHandle, uint8* pTxBuffer, uint32 Lenght);
-extern void USART_ReceiveData (const USART_Config* pUSARTHandle, uint8* pRxBuffer, uint32 Lenght);
-
-extern uint8 USART_SendDataIT (USART_Config* pUSARTHandle,uint8* pTxBuffer, uint32_t Lenght);
-extern uint8 USART_ReceiveDataIT (USART_Config* pUSARTHandle, uint8* pRxBuffer, uint32_t Lenght);
 
 /*
  ** IRQ Configuration and ISR handling
  */
-extern void USART_IRQInterruptConfig (uint8 IRQNumber, uint8 EnorDi);
-extern void USART_IRQPriorityConfig (uint8 IRQNumber, uint32 IRQPriority);
-extern void USART_IRQHandling (USART_Config* pHandle);
+
 
 /*
  ** Other Peripheral Control APIs
  */
-extern void  USART_PeripheralControl (const USART_Config* pUSARTHandle, uint8 EnOrDi);
-extern uint8 USART_GetFlagStatus(const USART_Config* pUSARTHandle, uint8 StatusFlagName);
-extern void  USART_ClearFlag (USART_TypeDef* pUSARTx, uint16 StatusFlagName);
+
 
 /*
  ** Application callback
  */
-extern void USART_ApplicationEventCallback(USART_Config* pUSARTHandle, uint8_t AppEv);
+
+/*
+** Send-receive 
+*/
 
 extern void  USART_SendChar(char c);
 extern uint8 USART_GetChar(void);

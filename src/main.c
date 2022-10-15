@@ -55,12 +55,16 @@ int main (void)
     //RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
     //LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/ 
     Port_ConfigType output = {PA5,PORTA,PORT_PIN_OUT};
-    Init_SerialCommGirbauProtocol (&GirbauSerProt);
     Port_Init(&output);
+    USART_Init(&GirbauSerProt);
     for(;;)
     {
-        SendCommand(&GirbauSerProt,GirbauMsg);
-        LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
+        //SendCommand(&GirbauSerProt,GirbauMsg);
+        USART_SendChar('N');
+        if('N' == USART_GetChar())
+        {
+            LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
+        }
         set_delay_mS(4000);
         LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
         set_delay_mS(4000);
