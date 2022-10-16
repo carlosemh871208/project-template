@@ -41,6 +41,7 @@ SRCDIR  = ../src
 ASWDIR  = ../src/ASW
 BSWDIR  = ../src/BSW
 RTEDIR  = ../src/RTE 
+MCUSDK  = ../src/MCU_SDK
 
 PTDRVS   = $(BSWDIR)/MCAL/IODrivers/PORTDrivers
 CDDUSART = $(BSWDIR)/CDD/USARTDriver
@@ -98,6 +99,9 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@echo Entering $(SRCDIR) folder
 	@mkdir -p $(OBJDIR) # Create obj directory
 	@echo
+	@echo Starting MCU_SDK compilation
+	@$(MAKE) -C $(MCUSDK)
+	@echo
 	@echo Starting BSW compilation
 	@$(MAKE) -C $(BSWDIR)
 	@echo
@@ -147,4 +151,5 @@ debug:
  #| carlosm |     NA      | 14-Mar-2022 | Added load command to flash uC       |
  #| carlosm |     NA      | 17-Mar-2022 | Added script for flashing firmware   |
  #| carlosm |     NA      | 17-Aug-2022 | Modified due RTE folder change       |
+ #| carlosm |    SAM-7    | 15-Oct-2022 | Added MCU SDK folder to project      |
 ################################################################################
