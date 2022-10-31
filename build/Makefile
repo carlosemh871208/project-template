@@ -32,19 +32,20 @@ OBJDIR = obj
 BINDIR = bin
 
 # Includes Directory
-INCDIR   = ../inc
-ASWINC   = ../src/ASW/Delay 
-ASWINC1  = ../src/ASW/SerialCommunication
+INCDIR  = ../inc
+
+ASWINC  = -I../src/ASW\
+
+
+MCUINC  = -I../src/MCU_SDK      \
+          -I../src/MCU_SDK/RCC  \
 
 # Source Directories
 SRCDIR  = ../src
 ASWDIR  = ../src/ASW
 BSWDIR  = ../src/BSW
-RTEDIR  = ../src/RTE 
 MCUSDK  = ../src/MCU_SDK
-
-PTDRVS   = $(BSWDIR)/MCAL/IODrivers/PORTDrivers
-CDDUSART = $(BSWDIR)/CDD/USARTDriver
+RTEDIR  = ../src/RTE 
 
 # Precompiled libraries Directory
 LIBDIR = ../lib
@@ -61,19 +62,14 @@ TGTHEX = $(BINDIR)/$(NAME).hex
 # Objects place
 OBJS   = $(OBJDIR)/main.o\
          $(OBJDIR)/stm32_startup.o\
-		 $(OBJDIR)/application_delay.o\
-		 $(OBJDIR)/delayServices.o\
-		 $(OBJDIR)/Port.o\
-		 $(OBJDIR)/usart.o\
 		 $(OBJDIR)/rcc.o\
-		 $(OBJDIR)/SerialCommGirbauProtocol.o
          
 #JLINK tool
 JLINK = /usr/bin/JLinkExe
 DEBUG = /usr/bin/JLinkGDBServer
 
 # Compilation flags
-CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(ASWINC) -I$(ASWINC1) -I$(PTDRVS) -I$(CDDUSART)
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) $(ASWINC) $(MCUINC)
 
 # Linker flags
 LFLAGS = -nostdlib -Wall -Werror -T $(LKRDIR)/stm32f401_ls.ld -Wl,-Map=$(BINDIR)/$(NAME).map

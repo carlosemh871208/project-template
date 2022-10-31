@@ -24,22 +24,12 @@ OBJDIR   = ../../../build/obj
 INCDIR   = ../../../inc
 
 #MCAL paths
-IODDIR =  ./IODrivers
-DIODIR =  $(IODDIR)/DIODrivers
-PORDIR =  $(IODDIR)/PORTDrivers
 
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
-SRC = $(PORDIR)/Port.c \
-
-OBJ = $(OBJDIR)/Port.o \
-
 ser :
 	@echo "Executing MCAL Makefile"
-	@echo Entering IODrivers.
-	@echo Compiling PORTDrivers folder source code.
-	$(CC) $(CFLAGS) $(SRC) -o $(OBJ)
 	@echo 
 
 # To add dependencies files

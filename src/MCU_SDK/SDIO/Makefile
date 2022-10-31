@@ -23,19 +23,19 @@ OBJDIR   = ../../../build/obj
 #includes path
 INCDIR   = ../../../inc
 
-#Services path
+#CDD paths
 
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
 ser :
-	@echo "Executing Services Makefile"
+	@echo "Executing SDIO Makefile"
 	@echo 
 
 # To add dependencies files
 -include $(OBJDIR)/*.d
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
- #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
- #| carlosm |     NA      | 17-Aug-2022 | Added delay services to project      |
+ #| carlosm |     NA      | 21-Sep-2022 | First version of Makefile            |
+ #| carlosm |     NA      | 23-Sep-2022 | Adedd RCC drivers                    | 
 ################################################################################

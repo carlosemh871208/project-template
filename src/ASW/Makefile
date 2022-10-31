@@ -23,33 +23,18 @@ OBJDIR   = ../../build/obj
 #includes path
 INCDIR   = ../../inc
 RTEDIR   = ../RTE
-SERDIR   = ../BSW/Services
-CDDDIR   = ../BSW/CDD
-
-CDDCOM   = ../BSW/CDD/USARTDriver
 
 #Services include paths
-DELDIR   = ../BSW/Services/Delay
 
 #Services path
-ASWDIR =  ./Delay
+ASWDIR =  ./
 
 # Compilation flags
-CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(RTEDIR) -I$(SERDIR) -I$(DELDIR)
-
-SRC = $(ASWDIR)/application_delay.c
-COM = ./SerialCommunication/SerialCommGirbauProtocol.c
-
-OBJ = $(OBJDIR)/application_delay.o
-COMOBJ = $(OBJDIR)/SerialCommGirbauProtocol.o
+CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR) -I$(RTEDIR)
 
 asw :
-	@echo "Executing Services Makefile"
-	@echo Compiling Delay folder source code.
-	$(CC) $(CFLAGS) $(SRC) -o $(OBJ)
-	@echo
-	@echo Compiling SerialCommunication folder source code.
-	$(CC) $(CFLAGS) -I$(CDDCOM) $(COM) -o $(COMOBJ)
+	@echo "Executing ASW Makefile"
+	@echo "Entering to SWC x folder" 
 	@echo 
 
 # To add dependencies files

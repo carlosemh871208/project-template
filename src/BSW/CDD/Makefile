@@ -23,30 +23,13 @@ OBJDIR   = ../../../build/obj
 #includes path
 INCDIR   = ../../../inc
 
-#MCAL paths
-USARTDIR =  ./USARTDriver
-RCCDIR   =  ./RCCDriver
+#CDD paths
 
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
-USARTSRC = $(USARTDIR)/usart.c 
-RCCSRC   = $(RCCDIR)/rcc.c
-
-USARTOBJ = $(OBJDIR)/usart.o 
-RCCOBJ   = $(OBJDIR)/rcc.o
-
 ser :
-	@echo "Executing CDD Makefile"
-	@echo Entering USARTDriver.
-	@echo Compiling USARTDriver folder source code.
-	$(CC) $(CFLAGS) -I$(RCCDIR) $(USARTSRC) -o $(USARTOBJ)
-	@echo Leaving USARTDriver folder
-	@echo
-	@echo Entering RCCDriver.
-	@echo Compiling RCCDriver folder source code.
-	$(CC) $(CFLAGS) $(RCCSRC) -o $(RCCOBJ)
-	@echo Leaving RCCDriver folder
+	@echo "Executing ADC Makefile"
 	@echo 
 
 # To add dependencies files

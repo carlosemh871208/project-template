@@ -24,52 +24,42 @@
 
 /*                                                       Includes                                                    */
 /*********************************************************************************************************************/
-#include "std_types.h"
+#include "Std_types.h"
 #include "stm32F401re.h"
-#include "application_delay.h"
-#include "Port.h"
-#include "SerialCommGirbauProtocol.h"
-#include "usart.h"
+#include "mcu_sdk.h"
 
 /*                                                Constants and types                                                */
 /*********************************************************************************************************************/
 #define LED_GPIO        GPIOA
 #define LED_PIN         5
 
-USART_Config GirbauSerProt = {USART6,
-                              USART_STD_BAUD_38400,
-                              USART_MODE_TXRX,
-                              USART_STOPBITS_2,
-                              USART_WORDLEN_8BITS,
-                              USART_PARITY_DISABLE,
-                              USART_PARITY_EN_EVEN,
-                              USART_HW_FLOW_CTRL_NONE
-};
-
-uint8 GirbauMsg[50] = {STX,0x00u,1,READSTATUS,0x00u};
+/*                                                Function prototypes                                                */
+/*********************************************************************************************************************/
+static void delay(unsigned time);
 
 /*                                           Main function implementation                                            */
 /*********************************************************************************************************************/
 int main (void)
 {
-    //RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    //LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/ 
-    Port_ConfigType output = {PA5,PORTA,PORT_PIN_OUT};
-    Port_Init(&output);
-    USART_Init(&GirbauSerProt);
+    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
+    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/ 
     for(;;)
     {
-        //SendCommand(&GirbauSerProt,GirbauMsg);
-        USART_SendChar('N');
-        if('N' == USART_GetChar())
+        if(MCU_SDK_PLLSYSCLK == MCU_SDK_RCC_GetSystemClockSource())
         {
             LED_GPIO->BSRR = (1 << LED_PIN); /*Set LED pin ON*/
+            delay(200);
+            LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
+            delay(200);
         }
-        set_delay_mS(4000);
-        LED_GPIO->BSRR = (1 << (LED_PIN + 16)); /*Set LED pin OFF*/
-        set_delay_mS(4000);
     }
     return EXIT_PROGRAM;
+}
+
+static void delay(unsigned time)
+{
+     for (unsigned i=0; i<time; i++)
+         for (volatile unsigned j=0; j<20000; j++);
 }
 /***************************************************Log Projects*******************************************************
  *|    ID   | JIRA Ticket |     Date    |                                Description                                  |

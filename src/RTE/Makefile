@@ -6,7 +6,7 @@
 ################################################################################
 # DESCRIPTION :                                                                                                     
 # Makefile
-#    Compilation BSW Services
+#    Compilation BSW
 ################################################################################
 #Microcontroller architecture
 MACH = cortex-m4
@@ -18,24 +18,27 @@ OBJCOPY = arm-none-eabi-objcopy
 SIZE    = arm-none-eabi-size
 
 #Object path
-OBJDIR   = ../../../build/obj
+OBJDIR   = ../../build/obj
 
 #includes path
-INCDIR   = ../../../inc
+INCDIR   = ../../inc
+
+#Services include paths
 
 #Services path
+RTEDIR =  ./
 
 # Compilation flags
 CFLAGS = -c -mcpu=$(MACH) -mthumb -std=gnu11 -Wall -Werror -o0 -I$(INCDIR)
 
-ser :
-	@echo "Executing Services Makefile"
+rte :
+	@echo "Executing RTE Makefile"
 	@echo 
 
 # To add dependencies files
 -include $(OBJDIR)/*.d
+
 ################################################################################
  #|    ID   | JIRA Ticket |     Date    |            Description               |
  #| carlosm |     NA      | 23-Feb-2022 | First version of Makefile            |
- #| carlosm |     NA      | 17-Aug-2022 | Added delay services to project      |
 ################################################################################
