@@ -12,95 +12,97 @@ LOAD obj/main.o
 LOAD obj/stm32_startup.o
 LOAD obj/rcc.o
 
-.text           0x0000000008000000      0x904
+.text           0x0000000008000000      0x980
  *(.isr_vector)
  .isr_vector    0x0000000008000000      0x194 obj/stm32_startup.o
                 0x0000000008000000                __vector_table
  *(.text*)
- .text          0x0000000008000194       0x8c obj/main.o
+ .text          0x0000000008000194       0x88 obj/main.o
                 0x0000000008000194                main
- .text          0x0000000008000220      0x178 obj/stm32_startup.o
-                0x0000000008000220                SystemInit
-                0x0000000008000314                SystemCoreClockUpdate
-                0x0000000008000384                Reset_Handler
-                0x0000000008000392                RTC_Alarm_IRQHandler
-                0x0000000008000392                EXTI2_IRQHandler
-                0x0000000008000392                DebugMon_Handler
-                0x0000000008000392                SPI4_IRQHandler
-                0x0000000008000392                TIM1_CC_IRQHandler
-                0x0000000008000392                DMA2_Stream5_IRQHandler
-                0x0000000008000392                HardFault_Handler
-                0x0000000008000392                DMA1_Stream5_IRQHandler
-                0x0000000008000392                SysTick_Handler
-                0x0000000008000392                PVD_IRQHandler
-                0x0000000008000392                SDIO_IRQHandler
-                0x0000000008000392                TAMP_STAMP_IRQHandler
-                0x0000000008000392                PendSV_Handler
-                0x0000000008000392                NMI_Handler
-                0x0000000008000392                EXTI3_IRQHandler
-                0x0000000008000392                TIM1_UP_TIM10_IRQHandler
-                0x0000000008000392                I2C3_ER_IRQHandler
-                0x0000000008000392                EXTI0_IRQHandler
-                0x0000000008000392                I2C2_EV_IRQHandler
-                0x0000000008000392                DMA1_Stream2_IRQHandler
-                0x0000000008000392                FPU_IRQHandler
-                0x0000000008000392                UsageFault_Handler
-                0x0000000008000392                DMA2_Stream2_IRQHandler
-                0x0000000008000392                SPI1_IRQHandler
-                0x0000000008000392                TIM1_BRK_TIM9_IRQHandler
-                0x0000000008000392                DMA2_Stream3_IRQHandler
-                0x0000000008000392                USART6_IRQHandler
-                0x0000000008000392                DMA2_Stream0_IRQHandler
-                0x0000000008000392                TIM4_IRQHandler
-                0x0000000008000392                I2C1_EV_IRQHandler
-                0x0000000008000392                DMA1_Stream6_IRQHandler
-                0x0000000008000392                DMA1_Stream1_IRQHandler
-                0x0000000008000392                TIM3_IRQHandler
-                0x0000000008000392                RCC_IRQHandler
-                0x0000000008000392                Default_Handler
-                0x0000000008000392                EXTI15_10_IRQHandler
-                0x0000000008000392                ADC_IRQHandler
-                0x0000000008000392                DMA1_Stream7_IRQHandler
-                0x0000000008000392                TIM5_IRQHandler
-                0x0000000008000392                DMA2_Stream7_IRQHandler
-                0x0000000008000392                I2C3_EV_IRQHandler
-                0x0000000008000392                EXTI9_5_IRQHandler
-                0x0000000008000392                RTC_WKUP_IRQHandler
-                0x0000000008000392                SPI2_IRQHandler
-                0x0000000008000392                MemManage_Handler
-                0x0000000008000392                DMA1_Stream0_IRQHandler
-                0x0000000008000392                SVC_Handler
-                0x0000000008000392                EXTI4_IRQHandler
-                0x0000000008000392                WWDG_IRQHandler
-                0x0000000008000392                TIM2_IRQHandler
-                0x0000000008000392                OTG_FS_WKUP_IRQHandler
-                0x0000000008000392                TIM1_TRG_COM_TIM11_IRQHandler
-                0x0000000008000392                EXTI1_IRQHandler
-                0x0000000008000392                USART2_IRQHandler
-                0x0000000008000392                I2C2_ER_IRQHandler
-                0x0000000008000392                DMA2_Stream1_IRQHandler
-                0x0000000008000392                FLASH_IRQHandler
-                0x0000000008000392                DMA2_Stream4_IRQHandler
-                0x0000000008000392                BusFault_Handler
-                0x0000000008000392                USART1_IRQHandler
-                0x0000000008000392                OTG_FS_IRQHandler
-                0x0000000008000392                SPI3_IRQHandler
-                0x0000000008000392                DMA1_Stream4_IRQHandler
-                0x0000000008000392                I2C1_ER_IRQHandler
-                0x0000000008000392                DMA2_Stream6_IRQHandler
-                0x0000000008000392                DMA1_Stream3_IRQHandler
- .text          0x0000000008000398      0x56c obj/rcc.o
-                0x0000000008000398                RCC_GetSystemClockSource
-                0x00000000080003ec                RCC_GetPLLClockSource
-                0x000000000800042c                RCC_GetSystemClockFrequency
-                0x00000000080004e8                RCC_GetPLLPDivisorFactor
-                0x000000000800054c                RCC_GetPLLNMultiplicatorFactor
-                0x00000000080005b4                RCC_GetPLLMDivisionFactor
-                0x00000000080005f8                RCC_GetPLLQDivisorFactor
-                0x0000000008000640                RCC_GetPLL48ClockFrequency
-                0x00000000080006fc                RCC_GetAHBClockDivisionFactor
-                0x00000000080007b8                RCC_GetAPB1ClockDivisionFactor
-                0x0000000008000828                RCC_GetAPB2ClockDivisionFactor
+ .text          0x000000000800021c      0x178 obj/stm32_startup.o
+                0x000000000800021c                SystemInit
+                0x0000000008000310                SystemCoreClockUpdate
+                0x0000000008000380                Reset_Handler
+                0x000000000800038e                RTC_Alarm_IRQHandler
+                0x000000000800038e                EXTI2_IRQHandler
+                0x000000000800038e                DebugMon_Handler
+                0x000000000800038e                SPI4_IRQHandler
+                0x000000000800038e                TIM1_CC_IRQHandler
+                0x000000000800038e                DMA2_Stream5_IRQHandler
+                0x000000000800038e                HardFault_Handler
+                0x000000000800038e                DMA1_Stream5_IRQHandler
+                0x000000000800038e                SysTick_Handler
+                0x000000000800038e                PVD_IRQHandler
+                0x000000000800038e                SDIO_IRQHandler
+                0x000000000800038e                TAMP_STAMP_IRQHandler
+                0x000000000800038e                PendSV_Handler
+                0x000000000800038e                NMI_Handler
+                0x000000000800038e                EXTI3_IRQHandler
+                0x000000000800038e                TIM1_UP_TIM10_IRQHandler
+                0x000000000800038e                I2C3_ER_IRQHandler
+                0x000000000800038e                EXTI0_IRQHandler
+                0x000000000800038e                I2C2_EV_IRQHandler
+                0x000000000800038e                DMA1_Stream2_IRQHandler
+                0x000000000800038e                FPU_IRQHandler
+                0x000000000800038e                UsageFault_Handler
+                0x000000000800038e                DMA2_Stream2_IRQHandler
+                0x000000000800038e                SPI1_IRQHandler
+                0x000000000800038e                TIM1_BRK_TIM9_IRQHandler
+                0x000000000800038e                DMA2_Stream3_IRQHandler
+                0x000000000800038e                USART6_IRQHandler
+                0x000000000800038e                DMA2_Stream0_IRQHandler
+                0x000000000800038e                TIM4_IRQHandler
+                0x000000000800038e                I2C1_EV_IRQHandler
+                0x000000000800038e                DMA1_Stream6_IRQHandler
+                0x000000000800038e                DMA1_Stream1_IRQHandler
+                0x000000000800038e                TIM3_IRQHandler
+                0x000000000800038e                RCC_IRQHandler
+                0x000000000800038e                Default_Handler
+                0x000000000800038e                EXTI15_10_IRQHandler
+                0x000000000800038e                ADC_IRQHandler
+                0x000000000800038e                DMA1_Stream7_IRQHandler
+                0x000000000800038e                TIM5_IRQHandler
+                0x000000000800038e                DMA2_Stream7_IRQHandler
+                0x000000000800038e                I2C3_EV_IRQHandler
+                0x000000000800038e                EXTI9_5_IRQHandler
+                0x000000000800038e                RTC_WKUP_IRQHandler
+                0x000000000800038e                SPI2_IRQHandler
+                0x000000000800038e                MemManage_Handler
+                0x000000000800038e                DMA1_Stream0_IRQHandler
+                0x000000000800038e                SVC_Handler
+                0x000000000800038e                EXTI4_IRQHandler
+                0x000000000800038e                WWDG_IRQHandler
+                0x000000000800038e                TIM2_IRQHandler
+                0x000000000800038e                OTG_FS_WKUP_IRQHandler
+                0x000000000800038e                TIM1_TRG_COM_TIM11_IRQHandler
+                0x000000000800038e                EXTI1_IRQHandler
+                0x000000000800038e                USART2_IRQHandler
+                0x000000000800038e                I2C2_ER_IRQHandler
+                0x000000000800038e                DMA2_Stream1_IRQHandler
+                0x000000000800038e                FLASH_IRQHandler
+                0x000000000800038e                DMA2_Stream4_IRQHandler
+                0x000000000800038e                BusFault_Handler
+                0x000000000800038e                USART1_IRQHandler
+                0x000000000800038e                OTG_FS_IRQHandler
+                0x000000000800038e                SPI3_IRQHandler
+                0x000000000800038e                DMA1_Stream4_IRQHandler
+                0x000000000800038e                I2C1_ER_IRQHandler
+                0x000000000800038e                DMA2_Stream6_IRQHandler
+                0x000000000800038e                DMA1_Stream3_IRQHandler
+ .text          0x0000000008000394      0x5ec obj/rcc.o
+                0x0000000008000394                RCC_GetSystemClockSource
+                0x00000000080003e8                RCC_GetPLLClockSource
+                0x0000000008000428                RCC_GetSystemClockFrequency
+                0x00000000080004e4                RCC_GetPLLPDivisorFactor
+                0x0000000008000548                RCC_GetPLLNMultiplicatorFactor
+                0x00000000080005b0                RCC_GetPLLMDivisionFactor
+                0x00000000080005f4                RCC_GetPLLQDivisorFactor
+                0x000000000800063c                RCC_GetPLL48ClockFrequency
+                0x00000000080006f8                RCC_GetAHBClockDivisionFactor
+                0x00000000080007b4                RCC_GetAPB1ClockDivisionFactor
+                0x0000000008000824                RCC_GetAPB2ClockDivisionFactor
+                0x0000000008000894                RCC_AHB1EnablePeripheralClock
+                0x00000000080008d4                RCC_AHB1DisablePeripheralClock
  *(.init)
  *(.fini)
  *crtbegin.o(.ctors)
@@ -116,34 +118,34 @@ LOAD obj/rcc.o
  *(.rodata*)
  *(.eh_frame*)
 
-.glue_7         0x0000000008000904        0x0
- .glue_7        0x0000000008000904        0x0 linker stubs
+.glue_7         0x0000000008000980        0x0
+ .glue_7        0x0000000008000980        0x0 linker stubs
 
-.glue_7t        0x0000000008000904        0x0
- .glue_7t       0x0000000008000904        0x0 linker stubs
+.glue_7t        0x0000000008000980        0x0
+ .glue_7t       0x0000000008000980        0x0 linker stubs
 
-.vfp11_veneer   0x0000000008000904        0x0
- .vfp11_veneer  0x0000000008000904        0x0 linker stubs
+.vfp11_veneer   0x0000000008000980        0x0
+ .vfp11_veneer  0x0000000008000980        0x0 linker stubs
 
-.v4_bx          0x0000000008000904        0x0
- .v4_bx         0x0000000008000904        0x0 linker stubs
+.v4_bx          0x0000000008000980        0x0
+ .v4_bx         0x0000000008000980        0x0 linker stubs
 
-.iplt           0x0000000008000904        0x0
- .iplt          0x0000000008000904        0x0 obj/main.o
+.iplt           0x0000000008000980        0x0
+ .iplt          0x0000000008000980        0x0 obj/main.o
 
-.rel.dyn        0x0000000008000904        0x0
- .rel.iplt      0x0000000008000904        0x0 obj/main.o
+.rel.dyn        0x0000000008000980        0x0
+ .rel.iplt      0x0000000008000980        0x0 obj/main.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000000008000904                __exidx_start = .
+                0x0000000008000980                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x0000000008000904                __exidx_end = .
-                0x0000000008000904                __etext = .
+                0x0000000008000980                __exidx_end = .
+                0x0000000008000980                __etext = .
 
-.data           0x0000000020000000        0x0 load address 0x0000000008000904
+.data           0x0000000020000000        0x0 load address 0x0000000008000980
                 0x0000000020000000                __data_start__ = .
  *(vtable)
  *(.data*)
@@ -168,10 +170,10 @@ LOAD obj/rcc.o
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                __data_end__ = .
 
-.igot.plt       0x0000000020000000        0x0 load address 0x0000000008000904
+.igot.plt       0x0000000020000000        0x0 load address 0x0000000008000980
  .igot.plt      0x0000000020000000        0x0 obj/main.o
 
-.bss            0x0000000020000000        0x4 load address 0x0000000008000904
+.bss            0x0000000020000000        0x4 load address 0x0000000008000980
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                __bss_start__ = .
  *(.bss*)

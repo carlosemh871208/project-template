@@ -118,6 +118,13 @@
 #define AHBDIVBY8     8u
 #define AHBDIVBY16    16u
 
+/* Peripheral Clock Enable/Disable */
+#define CLOCKDISABLE  0u
+#define CLOCKENABLE   1u
+
+
+
+
 /*                                                 Exported Variables                                                */
 /*********************************************************************************************************************/
 
@@ -133,6 +140,10 @@ extern uint32 RCC_GetPLL48ClockFrequency(void);             /* Return PLL48 cloc
 extern uint16 RCC_GetAHBClockDivisionFactor(void);          /* Return AHB clock division factor */
 extern uint8  RCC_GetAPB1ClockDivisionFactor(void);         /* Return APB1 clock division factor */
 extern uint8  RCC_GetAPB2ClockDivisionFactor(void);         /* Return APB2 clock division factor */
+
+extern uint8  RCC_AHB1EnablePeripheralClock(uint32 Peripheral); /* Enable or disable clock to chosen peripheral */
+extern uint8  RCC_AHB1DisablePeripheralClock(uint32 Peripheral); /* Disable or disable clock to chosen peripheral */
+
 
 #endif
 /***************************************************Log Projects*******************************************************

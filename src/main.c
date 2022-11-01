@@ -41,8 +41,10 @@ static void delay(unsigned time);
 /*********************************************************************************************************************/
 int main (void)
 {
-    RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOAEN; /*Enable clock to GPIOA*/
-    LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/ 
+    if(MCU_SDK_CLOCKENABLE == MCU_SDK_RCC_AHB1EnablePeripheralClock(MCU_SDK_RCC_AHB1ENR_GPIOAEN))
+    {
+        LED_GPIO->MODER |= (0b01 << (LED_PIN << 1)); /*Set LED pin as output*/
+    } 
     for(;;)
     {
         if(MCU_SDK_PLLSYSCLK == MCU_SDK_RCC_GetSystemClockSource())

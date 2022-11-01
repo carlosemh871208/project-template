@@ -1,7 +1,0 @@
-Device STM32F401RE
-si 1
-Speed 4000
-loadbin bin/stm32f401-exe.bin 0x08000000
-r
-g
-qc

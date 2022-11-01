@@ -42,6 +42,9 @@ extern uint16 RCC_GetAHBClockDivisionFactor(void);          /* Return AHB clock 
 extern uint8  RCC_GetAPB1ClockDivisionFactor(void);         /* Return APB1 clock division factor */
 extern uint8  RCC_GetAPB2ClockDivisionFactor(void);         /* Return APB2 clock division factor */
 
+extern uint8  RCC_AHB1EnablePeripheralClock(uint32 Peripheral); /* Enable or disable clock to chosen peripheral */
+extern uint8  RCC_AHB1DisablePeripheralClock(uint32 Peripheral); /* Disable or disable clock to chosen peripheral */
+
 static uint32 RCC_GetFrequencyVCOClock(uint32 PLLClkInput); /* Return VCO clock frequency */
 
 /*                                           Port function implementation                                            */
@@ -323,6 +326,37 @@ extern uint8  RCC_GetAPB2ClockDivisionFactor(void)
 		APB2prescaler = AHBDIVBY16;
 	}
 	return APB2prescaler;
+}
+
+/*
+** This function enable or disable clock to a specific peripheral that uses AHB1: GPIOA, GPIOB, GPIOC,
+** GPIOD, GPIOE, GPIOH, CRC, DMA1, DMA2
+** 
+*/
+extern uint8 RCC_AHB1EnablePeripheralClock(uint32 Peripheral)
+{
+	uint8 PerClkStatus = CLOCKDISABLE;
+	RCC->AHB1ENR |= Peripheral;
+	if(CLOCKDISABLE != (RCC->AHB1ENR & Peripheral))
+	{
+		PerClkStatus = CLOCKENABLE;
+	}else{
+		PerClkStatus = CLOCKDISABLE;
+	}
+	return PerClkStatus;
+}
+
+extern uint8 RCC_AHB1DisablePeripheralClock(uint32 Peripheral)
+{
+	uint8 PerClkStatus = CLOCKENABLE;
+	RCC->AHB1ENR &= ~Peripheral;
+	if(CLOCKDISABLE == (RCC->AHB1ENR & Peripheral))
+	{
+		PerClkStatus = CLOCKDISABLE;
+	}else{
+		PerClkStatus = CLOCKENABLE;
+	}
+	return PerClkStatus;
 }
 
 /* 
